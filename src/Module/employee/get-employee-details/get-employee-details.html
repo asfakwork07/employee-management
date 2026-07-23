@@ -1,0 +1,481 @@
+<div class="min-h-screen bg-slate-100">
+    <!-- Header -->
+    <!-- <div class="bg-gradient-to-r from-blue-700 to-indigo-700 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-2 py-1 flex flex-col md:flex-row justify-between items-center">
+
+            <div>
+                <h3 class="text-3xl font-bold">
+                    Employee Management
+                </h3>
+                <p class="text-blue-100">
+                    Manage all employees from one place
+                </p>
+            </div>
+
+            <button (click)="openModal()"
+                class="mt-4 md:mt-0 bg-white text-blue-700 px-5 py-2 rounded-lg font-semibold hover:bg-blue-100 transition">
+                ➕ Add Employee
+            </button>
+              <button (click)="openModal()"
+                class="mt-4 md:mt-0 bg-white text-blue-700 px-5 py-2 rounded-lg font-semibold hover:bg-blue-100 transition">
+                ➕ Add Employee
+            </button>
+
+        </div>
+    </div> -->
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-blue-700 to-indigo-700 text-white shadow-lg">
+
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center">
+
+
+            <!-- Left Side -->
+            <div>
+                <h3 class="text-3xl font-bold">
+                    Employee Management
+                </h3>
+
+                <p class="text-blue-100">
+                    Manage all employees from one place
+                </p>
+            </div>
+
+
+            <!-- Right Side Buttons -->
+            <div class="flex gap-3 mt-4 md:mt-0">
+
+
+                <button (click)="openModal()"
+                    class="bg-white text-blue-700 px-5 py-2 rounded-lg font-semibold hover:bg-blue-100 transition">
+
+                    ➕ Add Employee
+
+                </button>
+
+
+                <button (click)="logout()"
+                    class="bg-red-500 text-white px-5 py-2 rounded-lg font-semibold hover:bg-red-600 transition">
+
+                    🚪 Logout
+
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+    </div>
+    <div class="max-w-7xl mx-auto p-2">
+
+        <!-- Search -->
+
+        <div class="bg-white rounded-xl shadow p-2 mb-1">
+
+            <div class="flex flex-col md:flex-row gap-4">
+
+                <input type="text" [(ngModel)]="searchText" (input)="searchEmployee()"
+                    placeholder="Search by Name or Email..."
+                    class="flex-1 border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 rounded-lg">
+                    🔍 Search
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- Table -->
+
+        <div class="bg-white rounded-xl shadow-lg overflow-auto">
+
+            <table class="min-w-full">
+
+                <thead class="bg-slate-800 text-white">
+
+                    <tr>
+
+                        <th class="px-4 py-4 text-left cursor-pointer">
+                            ID
+                        </th>
+
+                        <th class="px-4 py-4 text-left cursor-pointer" (click)="sort('firstName')">
+                            First Name
+                        </th>
+
+                        <th class="px-4 py-4 text-left cursor-pointer">
+                            Last Name
+                        </th>
+
+                        <th class="px-4 py-4 text-left">
+                            Email
+                        </th>
+
+                        <th class="px-4 py-4 text-left">
+                            Phone
+                        </th>
+
+                        <th class="px-4 py-4 text-left cursor-pointer" (click)="sort('department')">
+                            Department
+                        </th>
+
+                        <th class="px-4 py-4 text-left">
+                            Designation
+                        </th>
+
+                        <th class="px-4 py-4 text-left cursor-pointer">
+                            Salary
+                        </th>
+
+                        <th class="px-4 py-4 text-left">
+                            Joining Date
+                        </th>
+
+                        <th class="px-4 py-4 text-left">
+                            Status
+                        </th>
+
+                        <th class="px-4 py-4 text-center">
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr *ngFor="let employee of filteredEmployees" class="border-b hover:bg-slate-50 transition">
+
+                        <td class="px-4 py-4">{{employee.id}}</td>
+
+                        <td class="px-4 py-4 font-semibold">
+                            {{employee.firstName}}
+                        </td>
+
+                        <td class="px-4 py-4">
+                            {{employee.lastName}}
+                        </td>
+
+                        <td class="px-4 py-4">
+                            {{employee.email}}
+                        </td>
+
+                        <td class="px-4 py-4">
+                            {{employee.phone}}
+                        </td>
+
+                        <td class="px-4 py-4">
+                            {{employee.department}}
+                        </td>
+
+                        <td class="px-4 py-4">
+                            {{employee.designation}}
+                        </td>
+
+                        <td class="px-4 py-4 font-semibold text-green-700">
+                            ₹{{employee.salary}}
+                        </td>
+
+                        <td class="px-4 py-4">
+                            {{employee.joiningDate}}
+                        </td>
+
+                        <td class="px-4 py-4">
+
+                            <span class="px-3 py-1 rounded-full text-xs font-bold" [ngClass]="{
+
+                                'bg-green-100 text-green-700':employee.status=='Active',
+
+                                'bg-red-100 text-red-700':employee.status=='Inactive'
+
+                            }">
+
+                                {{employee.status}}
+
+                            </span>
+
+                        </td>
+
+                        <td class="px-4 py-4">
+
+                            <div class="flex gap-2 justify-center">
+
+                                <button (click)="viewEmployee(employee)"
+                                    class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded">
+                                    👁
+                                </button>
+
+                                <button (click)="editEmployee(employee)"
+                                    class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded">
+                                    ✏
+                                </button>
+
+                                <button (click)="deleteEmployee(employee.id)"
+                                    class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded">
+                                    🗑
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    <tr *ngIf="employees.length==0">
+
+                        <td colspan="11" class="text-center py-10 text-gray-500">
+
+                            No Employees Found
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- Pagination -->
+
+        <div class="mt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+
+            <div class="text-gray-600">
+
+                Showing 1 to 10 of {{employees.length}} Employees
+
+            </div>
+
+            <div class="flex gap-2">
+
+                <button class="px-4 py-2 border rounded hover:bg-gray-200">
+                    Previous
+                </button>
+
+                <button class="px-4 py-2 bg-blue-600 text-white rounded">
+                    1
+                </button>
+
+                <button class="px-4 py-2 border rounded hover:bg-gray-200">
+                    2
+                </button>
+
+                <button class="px-4 py-2 border rounded hover:bg-gray-200">
+                    3
+                </button>
+
+                <button class="px-4 py-2 border rounded hover:bg-gray-200">
+                    Next
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Add Employee Modal -->
+@if(showModal){
+
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+
+    <!-- Modal -->
+    <div class="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl animate-[fadeIn_.2s_ease-in-out]">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between px-6 py-4 border-b">
+
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800">
+                    {{ isEditMode ? 'Edit Employee' : 'Add Employee' }}
+                </h2>
+
+                <p class="text-sm text-gray-500 mt-1">
+                    Fill all required employee details.
+                </p>
+            </div>
+
+            <button (click)="closeModal()"
+                class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-red-100 transition">
+
+                <span class="text-2xl text-gray-500 hover:text-red-600">
+                    &times;
+                </span>
+
+            </button>
+
+        </div>
+
+        <!-- Body -->
+
+        <div class="p-6 max-h-[70vh] overflow-y-auto">
+
+            <form [formGroup]="employeeForm" (ngSubmit)="saveEmployee()" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                <!-- First Name -->
+                <div>
+
+                    <label class="block text-sm font-semibold mb-2">
+                        First Name
+                    </label>
+
+                    <input type="text" formControlName="firstName"
+                        class="w-full rounded-xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+
+                </div>
+
+                <!-- Last Name -->
+
+                <div>
+
+                    <label class="block text-sm font-semibold mb-2">
+                        Last Name
+                    </label>
+
+                    <input type="text" formControlName="lastName"
+                        class="w-full rounded-xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500">
+
+                </div>
+
+                <!-- Email -->
+
+                <div>
+
+                    <label class="block text-sm font-semibold mb-2">
+                        Email
+                    </label>
+
+                    <input type="email" formControlName="email"
+                        class="w-full rounded-xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500">
+
+                </div>
+
+                <!-- Phone -->
+
+                <div>
+
+                    <label class="block text-sm font-semibold mb-2">
+                        Phone
+                    </label>
+
+                    <input type="text" formControlName="phone"
+                        class="w-full rounded-xl border border-gray-300 px-4 py-3">
+
+                </div>
+
+                <!-- Department -->
+
+                <div>
+
+                    <label class="block text-sm font-semibold mb-2">
+                        Department
+                    </label>
+
+                    <input type="text" formControlName="department"
+                        class="w-full rounded-xl border border-gray-300 px-4 py-3">
+
+                </div>
+
+                <!-- Designation -->
+
+                <div>
+
+                    <label class="block text-sm font-semibold mb-2">
+                        Designation
+                    </label>
+
+                    <input type="text" formControlName="designation"
+                        class="w-full rounded-xl border border-gray-300 px-4 py-3">
+
+                </div>
+
+                <!-- Salary -->
+
+                <div>
+
+                    <label class="block text-sm font-semibold mb-2">
+                        Salary
+                    </label>
+
+                    <input type="number" formControlName="salary"
+                        class="w-full rounded-xl border border-gray-300 px-4 py-3">
+
+                </div>
+
+                <!-- Joining Date -->
+
+                <div>
+
+                    <label class="block text-sm font-semibold mb-2">
+                        Joining Date
+                    </label>
+
+                    <input type="date" formControlName="joiningDate"
+                        class="w-full rounded-xl border border-gray-300 px-4 py-3">
+
+                </div>
+
+                <!-- Status -->
+
+                <div class="md:col-span-2">
+
+                    <label class="block text-sm font-semibold mb-2">
+                        Status
+                    </label>
+
+                    <select formControlName="status" class="w-full rounded-xl border border-gray-300 px-4 py-3">
+
+                        <option value="Active">
+                            Active
+                        </option>
+
+                        <option value="Inactive">
+                            Inactive
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </form>
+
+        </div>
+
+        <!-- Footer -->
+
+        <div class="flex justify-end gap-3 px-6 py-4 border-t bg-gray-50 rounded-b-2xl">
+
+            <button type="button" (click)="closeModal()"
+                class="px-5 py-2.5 rounded-xl border border-gray-300 hover:bg-gray-100 transition">
+
+                Cancel
+
+            </button>
+
+            <button type="button" (click)="employeeForm.reset({status:'Active'})"
+                class="px-5 py-2.5 rounded-xl bg-gray-500 text-white hover:bg-gray-600 transition">
+
+                Reset
+
+            </button>
+
+            <button type="submit" (click)="saveEmployee()" [disabled]="employeeForm.invalid"
+                class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow-lg hover:scale-105 hover:shadow-xl transition disabled:opacity-50">
+
+                {{ isEditMode ? 'Update Employee' : 'Save Employee' }}
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+}
