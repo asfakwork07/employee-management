@@ -73,9 +73,9 @@ export interface Employee {
 })
 export class EmployeeService {
 
-    private baseUrl = 'http://localhost:8080/api/employees';
+    private baseUrl = 'https://employee-management-backend-spring-boot-1.onrender.com/api/employees';
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     private getHeaders(): HttpHeaders {
         const token = localStorage.getItem('token');
@@ -120,4 +120,33 @@ export class EmployeeService {
             responseType: 'text'
         });
     }
+
+    importExcel1(file: File) {
+
+        const formData = new FormData();
+
+        formData.append('file', file);
+
+        return this.http.post(
+            this.baseUrl + '/import',
+            formData,
+            { responseType: 'text' }
+        );
+
+    }
+    importExcel(file: File) {
+
+  const formData = new FormData();
+
+  formData.append('file', file);
+
+  return this.http.post(
+    `${this.baseUrl}/import`,
+    formData,
+    {
+      responseType: 'text'
+    }
+  );
+
+}
 }
