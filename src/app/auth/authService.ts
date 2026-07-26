@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 
 export class AuthService  {
 
-  private apiUrl = "http://localhost:8080/api/auth";
+  private apiUrl = "https://employee-management-backend-spring-boot-1.onrender.com/api/auth";
 
 
   constructor(

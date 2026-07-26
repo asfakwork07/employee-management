@@ -1,29 +1,5 @@
 <div class="min-h-screen bg-slate-100">
     <!-- Header -->
-    <!-- <div class="bg-gradient-to-r from-blue-700 to-indigo-700 text-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-2 py-1 flex flex-col md:flex-row justify-between items-center">
-
-            <div>
-                <h3 class="text-3xl font-bold">
-                    Employee Management
-                </h3>
-                <p class="text-blue-100">
-                    Manage all employees from one place
-                </p>
-            </div>
-
-            <button (click)="openModal()"
-                class="mt-4 md:mt-0 bg-white text-blue-700 px-5 py-2 rounded-lg font-semibold hover:bg-blue-100 transition">
-                ➕ Add Employee
-            </button>
-              <button (click)="openModal()"
-                class="mt-4 md:mt-0 bg-white text-blue-700 px-5 py-2 rounded-lg font-semibold hover:bg-blue-100 transition">
-                ➕ Add Employee
-            </button>
-
-        </div>
-    </div> -->
-    <!-- Header -->
     <div class="bg-gradient-to-r from-blue-700 to-indigo-700 text-white shadow-lg">
 
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center">
@@ -50,6 +26,10 @@
 
                     ➕ Add Employee
 
+                </button>
+                <button (click)="showImportModals()"
+                    class="bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition">
+                    📄 Add By Excel
                 </button>
 
 
@@ -89,7 +69,7 @@
 
         <!-- Table -->
 
-        <div class="bg-white rounded-xl shadow-lg overflow-auto">
+        <div class="bg-white rounded-xl shadow-lg overflow-auto h-[59vh]">
 
             <table class="min-w-full">
 
@@ -147,7 +127,7 @@
 
                 <tbody>
 
-                    <tr *ngFor="let employee of filteredEmployees" class="border-b hover:bg-slate-50 transition">
+                    <tr *ngFor="let employee of paginatedEmployees" class="border-b hover:bg-slate-50 transition">
 
                         <td class="px-4 py-4">{{employee.id}}</td>
 
@@ -241,35 +221,53 @@
         </div>
 
         <!-- Pagination -->
-
         <div class="mt-6 flex flex-col md:flex-row justify-between items-center gap-4">
 
-            <div class="text-gray-600">
+            <div class="text-gray-600 font-medium">
 
-                Showing 1 to 10 of {{employees.length}} Employees
+                Showing
+                {{ (currentPage-1)*itemsPerPage + 1 }}
+                to
+                {{ endRecord }}
+                of
+                {{ filteredEmployees.length }}
+                Employees
 
             </div>
 
-            <div class="flex gap-2">
+            <div class="flex items-center gap-2">
 
-                <button class="px-4 py-2 border rounded hover:bg-gray-200">
+                <!-- Previous -->
+
+                <button (click)="previousPage()" [disabled]="currentPage==1"
+                    class="px-4 py-2 rounded border hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed">
+
                     Previous
+
                 </button>
 
-                <button class="px-4 py-2 bg-blue-600 text-white rounded">
-                    1
+                <!-- Page Numbers -->
+
+                <button *ngFor="let page of pages" (click)="goToPage(page)" class="w-10 h-10 rounded transition"
+                    [ngClass]="{
+
+                'bg-blue-600 text-white':page==currentPage,
+
+                'border hover:bg-gray-100':page!=currentPage
+
+            }">
+
+                    {{page}}
+
                 </button>
 
-                <button class="px-4 py-2 border rounded hover:bg-gray-200">
-                    2
-                </button>
+                <!-- Next -->
 
-                <button class="px-4 py-2 border rounded hover:bg-gray-200">
-                    3
-                </button>
+                <button (click)="nextPage()" [disabled]="currentPage==totalPages"
+                    class="px-4 py-2 rounded border hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed">
 
-                <button class="px-4 py-2 border rounded hover:bg-gray-200">
                     Next
+
                 </button>
 
             </div>
@@ -469,6 +467,251 @@
                 class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow-lg hover:scale-105 hover:shadow-xl transition disabled:opacity-50">
 
                 {{ isEditMode ? 'Update Employee' : 'Save Employee' }}
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+}
+
+@if(showImportModal){
+
+<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+
+    <div class="bg-white rounded-2xl shadow-2xl w-[420px]">
+
+        <!-- Header -->
+
+        <div class="flex justify-between items-center px-6 py-4 border-b">
+
+            <h2 class="text-xl font-bold">
+                Import Employees
+            </h2>
+
+            <button (click)="showImportModal=false" class="text-gray-500 hover:text-red-600 text-2xl">
+                &times;
+            </button>
+
+        </div>
+
+        <!-- Body -->
+
+        <div class="p-6">
+
+            <label class="block text-sm font-semibold mb-2">
+
+                Select Excel File
+
+            </label>
+
+            <input type="file" accept=".xlsx,.xls" (change)="onFileSelected($event)"
+                class="w-full border rounded-lg p-2">
+
+            <p class="text-xs text-gray-500 mt-2">
+
+                Supported files: .xlsx, .xls
+
+            </p>
+
+        </div>
+
+        <!-- Footer -->
+
+        <div class="flex justify-end gap-3 px-6 py-4 border-t bg-gray-50 rounded-b-2xl">
+
+            <button (click)="showImportModal=false" class="px-4 py-2 border rounded-lg hover:bg-gray-100">
+
+                Cancel
+
+            </button>
+
+            <button (click)="importExcel()" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg">
+
+                Upload
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+}
+
+@if(showViewModal){
+
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden">
+
+        <!-- Header -->
+        <div
+            class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-5 flex items-center justify-between">
+
+            <div class="flex items-center gap-4">
+
+                <div
+                    class="w-16 h-16 rounded-full bg-white text-blue-600 flex items-center justify-center text-3xl font-bold shadow">
+
+                    {{selectedEmployee.firstName.charAt(0)}}{{selectedEmployee.lastName.charAt(0)}}
+
+                </div>
+
+                <div>
+
+                    <h2 class="text-2xl font-bold">
+
+                        {{selectedEmployee.firstName}}
+                        {{selectedEmployee.lastName}}
+
+                    </h2>
+
+                    <p class="text-blue-100">
+
+                        {{selectedEmployee.designation}}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <button (click)="closeViewModal()" class="text-3xl hover:text-red-300 transition">
+
+                &times;
+
+            </button>
+
+        </div>
+
+        <!-- Body -->
+        <div class="p-2">
+
+            <div class="grid grid-cols-2 gap-2">
+
+                <div class="bg-slate-50 rounded-xl p-2 shadow-sm">
+
+                    <p class="text-gray-500 text-sm">
+                        Employee ID
+                    </p>
+
+                    <p class="font-bold text-lg">
+                        #{{selectedEmployee.id}}
+                    </p>
+
+                </div>
+
+                <div class="bg-slate-50 rounded-xl p-4 shadow-sm">
+
+                    <p class="text-gray-500 text-sm">
+                        Status
+                    </p>
+
+                    <span class="px-3 py-1 rounded-full text-sm font-semibold" [ngClass]="{
+                        'bg-green-100 text-green-700':selectedEmployee.status=='Active',
+                        'bg-red-100 text-red-700':selectedEmployee.status=='Inactive'
+                    }">
+
+                        {{selectedEmployee.status}}
+
+                    </span>
+
+                </div>
+
+                <div class="bg-slate-50 rounded-xl p-4 shadow-sm">
+
+                    <p class="text-gray-500 text-sm">
+                        Email
+                    </p>
+
+                    <p class="font-semibold">
+                        {{selectedEmployee.email}}
+                    </p>
+
+                </div>
+
+                <div class="bg-slate-50 rounded-xl p-4 shadow-sm">
+
+                    <p class="text-gray-500 text-sm">
+                        Phone
+                    </p>
+
+                    <p class="font-semibold">
+                        {{selectedEmployee.phone}}
+                    </p>
+
+                </div>
+
+                <div class="bg-slate-50 rounded-xl p-4 shadow-sm">
+
+                    <p class="text-gray-500 text-sm">
+                        Department
+                    </p>
+
+                    <p class="font-semibold">
+                        {{selectedEmployee.department}}
+                    </p>
+
+                </div>
+
+                <div class="bg-slate-50 rounded-xl p-4 shadow-sm">
+
+                    <p class="text-gray-500 text-sm">
+                        Designation
+                    </p>
+
+                    <p class="font-semibold">
+                        {{selectedEmployee.designation}}
+                    </p>
+
+                </div>
+
+                <div class="bg-slate-50 rounded-xl p-4 shadow-sm">
+
+                    <p class="text-gray-500 text-sm">
+                        Salary
+                    </p>
+
+                    <p class="text-green-600 text-xl font-bold">
+
+                        ₹{{selectedEmployee.salary}}
+
+                    </p>
+
+                </div>
+
+                <div class="bg-slate-50 rounded-xl p-4 shadow-sm">
+
+                    <p class="text-gray-500 text-sm">
+                        Joining Date
+                    </p>
+
+                    <p class="font-semibold">
+
+                        {{selectedEmployee.joiningDate | date:'dd MMM yyyy'}}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="bg-gray-100 px-6 py-4 flex justify-end gap-3">
+
+
+
+            <button (click)="closeViewModal()"
+                class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg font-semibold">
+
+                Close
 
             </button>
 
