@@ -1,50 +1,30 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
+export class AuthService {
+  // private apiUrl = "https://employee-management-backend-spring-boot-1.onrender.com/api/auth";
+  private apiUrl = `${environment.apiUrl}/auth`;
 
-export class AuthService  {
+  constructor(private http: HttpClient) {}
 
-  private apiUrl = "https://employee-management-backend-spring-boot-1.onrender.com/api/auth";
-
-
-  constructor(
-    private http: HttpClient
-  ) { }
-
-
-  login(data:any): Observable<any>{
-
-    return this.http.post(
-      `${this.apiUrl}/login`,
-      data
-    );
-
+  login(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/login`, data);
   }
 
-
-  logout(){
-
+  logout() {
     localStorage.removeItem('token');
-
   }
 
-
-  getToken(){
-
+  getToken() {
     return localStorage.getItem('token');
-
   }
 
-
-  isLoggedIn(){
-
+  isLoggedIn() {
     return !!this.getToken();
-
   }
-
 }
