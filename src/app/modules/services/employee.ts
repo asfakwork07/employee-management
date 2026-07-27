@@ -54,7 +54,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { API_URL } from '../../auth/config/api.config';
 
 export interface Employee {
     id?: number;
@@ -75,7 +75,7 @@ export interface Employee {
 export class EmployeeService {
 
     // private apiUrl = 'http://localhost:8080/api/employees';
-    private apiUrl = `${environment.apiUrl}/employees`;
+      private apiUrl = `${API_URL}/employees`;
 
     constructor(private http: HttpClient) { }
 
