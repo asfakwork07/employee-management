@@ -19,33 +19,33 @@
 // })
 // export class EmployeeService {
 
-//     private baseUrl = 'http://localhost:8080/api/employees';
+//     private apiUrl = 'http://localhost:8080/api/employees';
 
 //     constructor(private http: HttpClient) { }
 
 //     // Get All Employees
 //     getAllEmployees(): Observable<Employee[]> {
-//         return this.http.get<Employee[]>(this.baseUrl);
+//         return this.http.get<Employee[]>(this.apiUrl);
 //     }
 
 //     // Get Employee By Id
 //     getEmployeeById(id: number): Observable<Employee> {
-//         return this.http.get<Employee>(`${this.baseUrl}/${id}`);
+//         return this.http.get<Employee>(`${this.apiUrl}/${id}`);
 //     }
 
 //     // Save Employee
 //     addEmployee(employee: any) {
-//         return this.http.post(this.baseUrl, employee);
+//         return this.http.post(this.apiUrl, employee);
 //     }
 
 //     // Update Employee
 //     updateEmployee(id: number, employee: Employee): Observable<Employee> {
-//         return this.http.put<Employee>(`${this.baseUrl}/${id}`, employee);
+//         return this.http.put<Employee>(`${this.apiUrl}/${id}`, employee);
 //     }
 
 //     // Delete Employee
 //     deleteEmployee(id: number): Observable<any> {
-//         return this.http.delete(`${this.baseUrl}/${id}`, {
+//         return this.http.delete(`${this.apiUrl}/${id}`, {
 //             responseType: 'text'
 //         });
 //     }
@@ -54,6 +54,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface Employee {
     id?: number;
@@ -73,7 +74,8 @@ export interface Employee {
 })
 export class EmployeeService {
 
-    private baseUrl = 'https://employee-management-backend-spring-boot-1.onrender.com/api/employees';
+    // private apiUrl = 'http://localhost:8080/api/employees';
+    private apiUrl = `${environment.apiUrl}/employees`;
 
     constructor(private http: HttpClient) { }
 
@@ -87,35 +89,35 @@ export class EmployeeService {
 
     // Get All Employees
     getAllEmployees(): Observable<Employee[]> {
-        return this.http.get<Employee[]>(this.baseUrl, {
+        return this.http.get<Employee[]>(this.apiUrl, {
             headers: this.getHeaders()
         },);
     }
 
     // Get Employee By Id
     getEmployeeById(id: number): Observable<Employee> {
-        return this.http.get<Employee>(`${this.baseUrl}/${id}`, {
+        return this.http.get<Employee>(`${this.apiUrl}/${id}`, {
             headers: this.getHeaders()
         });
     }
 
     // Save Employee
     addEmployee(employee: Employee): Observable<Employee> {
-        return this.http.post<Employee>(this.baseUrl, employee, {
+        return this.http.post<Employee>(this.apiUrl, employee, {
             headers: this.getHeaders(), responseType: 'text'
         });
     }
 
     // Update Employee
     updateEmployee(id: number, employee: Employee): Observable<Employee> {
-        return this.http.put<Employee>(`${this.baseUrl}/${id}`, employee, {
+        return this.http.put<Employee>(`${this.apiUrl}/${id}`, employee, {
             headers: this.getHeaders()
         });
     }
 
     // Delete Employee
     deleteEmployee(id: number): Observable<string> {
-        return this.http.delete(`${this.baseUrl}/${id}`, {
+        return this.http.delete(`${this.apiUrl}/${id}`, {
             headers: this.getHeaders(),
             responseType: 'text'
         });
@@ -128,7 +130,7 @@ export class EmployeeService {
         formData.append('file', file);
 
         return this.http.post(
-            this.baseUrl + '/import',
+            this.apiUrl + '/import',
             formData,
             { responseType: 'text' }
         );
@@ -141,7 +143,7 @@ export class EmployeeService {
   formData.append('file', file);
 
   return this.http.post(
-    `${this.baseUrl}/import`,
+    `${this.apiUrl}/import`,
     formData,
     {
       responseType: 'text'
