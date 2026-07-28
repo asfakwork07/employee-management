@@ -6,4 +6,4 @@
 export const API_URL =
   window.location.hostname === 'localhost'
     ? 'http://13.49.241.55/api'
-    : 'http://13.49.241.55/api';
+    : 'https://employee-management-backend-spring-boot-1.onrender.com/api';
