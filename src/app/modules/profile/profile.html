@@ -1,0 +1,375 @@
+<div class="space-y-6">
+  <div>
+    <h1 class="text-2xl font-bold text-slate-800">My Profile</h1>
+
+    <p class="text-sm text-gray-500 mt-1">View your personal and employment information</p>
+  </div>
+
+  <div
+    *ngIf="loading"
+    class="bg-white border border-gray-200 rounded-xl shadow-sm p-14 text-center text-gray-500"
+  >
+    <i class="bi bi-arrow-repeat inline-block animate-spin mr-2"></i>
+    Loading profile...
+  </div>
+
+  <div
+    *ngIf="!loading && errorMessage"
+    class="bg-red-50 border border-red-200 rounded-xl p-5 text-red-700"
+  >
+    <div class="flex items-center gap-3">
+      <i class="bi bi-exclamation-triangle-fill text-xl"></i>
+
+      <div>
+        <p class="font-semibold">Unable to load profile</p>
+
+        <p class="text-sm mt-1">
+          {{ errorMessage }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <ng-container *ngIf="!loading && profile">
+    <div class="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl shadow-lg overflow-hidden">
+      <div class="p-6 md:p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+        <div class="flex items-center gap-5">
+          <div
+            class="w-20 h-20 rounded-full bg-white text-blue-600 flex items-center justify-center text-2xl font-bold shadow-lg shrink-0"
+          >
+            {{ getInitials() }}
+          </div>
+
+          <div class="text-white">
+            <p class="text-sm text-blue-100">Employee ID #{{ profile.id }}</p>
+
+            <h2 class="text-2xl md:text-3xl font-bold mt-1">
+              {{ profile.firstName }}
+              {{ profile.lastName }}
+            </h2>
+
+            <p class="text-blue-100 mt-2">
+              {{ profile.designation }}
+              •
+              {{ profile.department }}
+            </p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-2">
+          <span
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold"
+            [ngClass]="{
+              'bg-green-100 text-green-700': profile.status === 'Active',
+
+              'bg-red-100 text-red-700': profile.status !== 'Active',
+            }"
+          >
+            <i
+              class="bi"
+              [ngClass]="profile.status === 'Active' ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"
+            ></i>
+
+            {{ profile.status }}
+          </span>
+
+          <span
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold"
+            [ngClass]="{
+              'bg-white text-green-700': profile.accountEnabled,
+
+              'bg-red-100 text-red-700': !profile.accountEnabled,
+            }"
+          >
+            <i
+              class="bi"
+              [ngClass]="profile.accountEnabled ? 'bi-shield-check' : 'bi-shield-x'"
+            ></i>
+
+            {{ profile.accountEnabled ? 'Account Active' : 'Account Disabled' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <div class="xl:col-span-2 space-y-6">
+        <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+          <div class="px-6 py-5 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-slate-800">Personal Information</h2>
+
+            <p class="text-sm text-gray-500 mt-1">Your contact and personal details</p>
+          </div>
+
+          <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div class="border border-gray-200 rounded-xl p-4">
+                <div class="flex items-start gap-3">
+                  <div
+                    class="w-10 h-10 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center shrink-0"
+                  >
+                    <i class="bi bi-person"></i>
+                  </div>
+
+                  <div>
+                    <p class="text-xs text-gray-500 uppercase">Full Name</p>
+
+                    <p class="font-semibold text-slate-800 mt-1">
+                      {{ profile.firstName }}
+                      {{ profile.lastName }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="border border-gray-200 rounded-xl p-4">
+                <div class="flex items-start gap-3">
+                  <div
+                    class="w-10 h-10 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center shrink-0"
+                  >
+                    <i class="bi bi-envelope"></i>
+                  </div>
+
+                  <div class="min-w-0">
+                    <p class="text-xs text-gray-500 uppercase">Email</p>
+
+                    <p class="font-semibold text-slate-800 mt-1 break-all">
+                      {{ profile.email }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="border border-gray-200 rounded-xl p-4">
+                <div class="flex items-start gap-3">
+                  <div
+                    class="w-10 h-10 rounded-lg bg-green-100 text-green-600 flex items-center justify-center shrink-0"
+                  >
+                    <i class="bi bi-telephone"></i>
+                  </div>
+
+                  <div>
+                    <p class="text-xs text-gray-500 uppercase">Phone</p>
+
+                    <p class="font-semibold text-slate-800 mt-1">
+                      {{ profile.phone || '--' }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="border border-gray-200 rounded-xl p-4">
+                <div class="flex items-start gap-3">
+                  <div
+                    class="w-10 h-10 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0"
+                  >
+                    <i class="bi bi-person-badge"></i>
+                  </div>
+
+                  <div>
+                    <p class="text-xs text-gray-500 uppercase">Employee ID</p>
+
+                    <p class="font-semibold text-slate-800 mt-1">#{{ profile.id }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+          <div class="px-6 py-5 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-slate-800">Employment Information</h2>
+
+            <p class="text-sm text-gray-500 mt-1">Your current organization details</p>
+          </div>
+
+          <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div class="bg-slate-50 rounded-xl p-5">
+                <p class="text-sm text-gray-500">Department</p>
+
+                <p class="text-lg font-bold text-slate-800 mt-2">
+                  {{ profile.department || '--' }}
+                </p>
+              </div>
+
+              <div class="bg-slate-50 rounded-xl p-5">
+                <p class="text-sm text-gray-500">Designation</p>
+
+                <p class="text-lg font-bold text-slate-800 mt-2">
+                  {{ profile.designation || '--' }}
+                </p>
+              </div>
+
+              <div class="bg-slate-50 rounded-xl p-5">
+                <p class="text-sm text-gray-500">Joining Date</p>
+
+                <p class="text-lg font-bold text-slate-800 mt-2">
+                  {{ profile.joiningDate | date: 'dd MMM yyyy' }}
+                </p>
+              </div>
+
+              <div class="bg-slate-50 rounded-xl p-5">
+                <p class="text-sm text-gray-500">Monthly Salary</p>
+
+                <p class="text-lg font-bold text-green-600 mt-2">
+                  ₹{{ profile.salary | number: '1.0-0' }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+          <div class="px-5 py-4 border-b border-gray-200">
+            <h2 class="font-semibold text-slate-800">Account Status</h2>
+
+            <p class="text-sm text-gray-500 mt-1">Login and account information</p>
+          </div>
+
+          <div class="p-5 space-y-4">
+            <div
+              class="flex items-center justify-between gap-3 border border-gray-200 rounded-xl p-4"
+            >
+              <div>
+                <p class="text-sm font-semibold text-slate-700">Login Account</p>
+
+                <p class="text-xs text-gray-500 mt-1">Employee portal access</p>
+              </div>
+
+              <span
+                class="px-3 py-1 rounded-full text-xs font-semibold"
+                [ngClass]="{
+                  'bg-green-100 text-green-700': profile.loginEnabled,
+
+                  'bg-gray-100 text-gray-600': !profile.loginEnabled,
+                }"
+              >
+                {{ profile.loginEnabled ? 'Enabled' : 'Not Created' }}
+              </span>
+            </div>
+
+            <div
+              class="flex items-center justify-between gap-3 border border-gray-200 rounded-xl p-4"
+            >
+              <div>
+                <p class="text-sm font-semibold text-slate-700">Account Status</p>
+
+                <p class="text-xs text-gray-500 mt-1">Current login permission</p>
+              </div>
+
+              <span
+                class="px-3 py-1 rounded-full text-xs font-semibold"
+                [ngClass]="{
+                  'bg-green-100 text-green-700': profile.accountEnabled,
+
+                  'bg-red-100 text-red-700': !profile.accountEnabled,
+                }"
+              >
+                {{ profile.accountEnabled ? 'Active' : 'Disabled' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+          <div class="px-5 py-4 border-b border-gray-200">
+            <h2 class="font-semibold text-slate-800">Quick Access</h2>
+
+            <p class="text-sm text-gray-500 mt-1">Your frequently used modules</p>
+          </div>
+
+          <div class="p-4 space-y-3">
+            <button
+              type="button"
+              (click)="navigateTo('/attendance')"
+              class="w-full flex items-center justify-between gap-3 p-4 border border-gray-200 rounded-xl hover:bg-blue-50 hover:border-blue-200 transition text-left"
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-10 h-10 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center"
+                >
+                  <i class="bi bi-clock-history"></i>
+                </div>
+
+                <div>
+                  <p class="font-semibold text-slate-700">Attendance</p>
+
+                  <p class="text-xs text-gray-500">Check in and attendance history</p>
+                </div>
+              </div>
+
+              <i class="bi bi-chevron-right text-gray-400"></i>
+            </button>
+
+            <button
+              type="button"
+              (click)="navigateTo('/leaves')"
+              class="w-full flex items-center justify-between gap-3 p-4 border border-gray-200 rounded-xl hover:bg-green-50 hover:border-green-200 transition text-left"
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-10 h-10 rounded-lg bg-green-100 text-green-600 flex items-center justify-center"
+                >
+                  <i class="bi bi-calendar2-week"></i>
+                </div>
+
+                <div>
+                  <p class="font-semibold text-slate-700">Leaves</p>
+
+                  <p class="text-xs text-gray-500">Apply and track leave requests</p>
+                </div>
+              </div>
+
+              <i class="bi bi-chevron-right text-gray-400"></i>
+            </button>
+
+            <button
+              type="button"
+              (click)="navigateTo('/salary')"
+              class="w-full flex items-center justify-between gap-3 p-4 border border-gray-200 rounded-xl hover:bg-purple-50 hover:border-purple-200 transition text-left"
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-10 h-10 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center"
+                >
+                  <i class="bi bi-wallet2"></i>
+                </div>
+
+                <div>
+                  <p class="font-semibold text-slate-700">Salary</p>
+
+                  <p class="text-xs text-gray-500">View salary and payslips</p>
+                </div>
+              </div>
+
+              <i class="bi bi-chevron-right text-gray-400"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-blue-50 border border-blue-100 rounded-xl p-5">
+          <div class="flex items-start gap-3">
+            <div
+              class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0"
+            >
+              <i class="bi bi-info-circle"></i>
+            </div>
+
+            <div>
+              <p class="font-semibold text-slate-700">Profile Information</p>
+
+              <p class="text-sm text-gray-600 mt-1 leading-5">
+                Contact your administrator if any profile or employment information needs to be
+                updated.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

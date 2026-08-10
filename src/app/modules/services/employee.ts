@@ -52,103 +52,159 @@
 
 // }
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpContextToken, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_URL } from '../../auth/config/api.config';
 
 export interface Employee {
-    id?: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    department: string;
-    designation: string;
-    salary: number;
-    joiningDate: string;
-    status: string;
+  id?: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  department: string;
+  designation: string;
+  salary: number;
+  joiningDate: string;
+  status: string;
 }
+
+// Global loader skip karne ke liye
+export const SKIP_LOADER = new HttpContextToken<boolean>(() => false);
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class EmployeeService {
+  // private apiUrl = 'http://localhost:8080/api/employees';
+  private apiUrl = `${API_URL}/employees`;
 
-    // private apiUrl = 'http://localhost:8080/api/employees';
-      private apiUrl = `${API_URL}/employees`;
+  private apiUrlAi = `${API_URL}`;
 
-    constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-    private getHeaders(): HttpHeaders {
-        const token = localStorage.getItem('token');
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
 
-        return new HttpHeaders({
-            Authorization: `Bearer ${token}`
-        });
-    }
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+  }
 
-    // Get All Employees
-    getAllEmployees(): Observable<Employee[]> {
-        return this.http.get<Employee[]>(this.apiUrl, {
-            headers: this.getHeaders()
-        },);
-    }
+  // getPerformanceSummary(employeeId: number, month: number, year: number): Observable<any> {
+  //   return this.http.get<any>(`${this.apiUrlAi}/ai/performance/${employeeId}`, {
+  //     params: {
+  //       month: month.toString(),
+  //       year: year.toString(),
+  //     },
+  //   });
+  // }
 
-    // Get Employee By Id
-    getEmployeeById(id: number): Observable<Employee> {
-        return this.http.get<Employee>(`${this.apiUrl}/${id}`, {
-            headers: this.getHeaders()
-        });
-    }
+  // getMyPerformanceSummary(month: number, year: number): Observable<any> {
+  //   return this.http.get<any>(`${this.apiUrlAi}/ai/performance/me`, {
+  //     params: {
+  //       month: month.toString(),
+  //       year: year.toString(),
+  //     },
+  //   });
+  // }
 
-    // Save Employee
-    addEmployee(employee: Employee): Observable<Employee> {
-        return this.http.post<Employee>(this.apiUrl, employee, {
-            headers: this.getHeaders(), responseType: 'text'
-        });
-    }
+  getPerformanceSummary(
+    employeeId: number,
+    month: number,
+    year: number,
+    regenerate: boolean = false,
+  ): Observable<any> {
+    return this.http.get<any>(`${this.apiUrlAi}/ai/performance/${employeeId}`, {
+      params: {
+        month: month.toString(),
+        year: year.toString(),
+        regenerate: regenerate.toString(),
+      },
+    });
+  }
 
-    // Update Employee
-    updateEmployee(id: number, employee: Employee): Observable<Employee> {
-        return this.http.put<Employee>(`${this.apiUrl}/${id}`, employee, {
-            headers: this.getHeaders()
-        });
-    }
+  getMyPerformanceSummary(
+    month: number,
+    year: number,
+    regenerate: boolean = false,
+  ): Observable<any> {
+    return this.http.get<any>(`${this.apiUrlAi}/ai/performance/me`, {
+      params: {
+        month: month.toString(),
+        year: year.toString(),
+        regenerate: regenerate.toString(),
+      },
+    });
+  }
 
-    // Delete Employee
-    deleteEmployee(id: number): Observable<string> {
-        return this.http.delete(`${this.apiUrl}/${id}`, {
-            headers: this.getHeaders(),
-            responseType: 'text'
-        });
-    }
+  // Get All Employees
+  getAllEmployees(): Observable<Employee[]> {
+    return this.http.get<Employee[]>(this.apiUrl, {
+      headers: this.getHeaders(),
+    });
+  }
 
-    importExcel1(file: File) {
+  // Get Employee By Id
+  getEmployeeById(id: number): Observable<Employee> {
+    return this.http.get<Employee>(`${this.apiUrl}/${id}`, {
+      headers: this.getHeaders(),
+    });
+  }
 
-        const formData = new FormData();
+  // Save Employee
+  addEmployee(employee: Employee): Observable<Employee> {
+    return this.http.post<Employee>(this.apiUrl, employee, {
+      headers: this.getHeaders(),
+      responseType: 'text',
+    });
+  }
 
-        formData.append('file', file);
+  // Update Employee
+  updateEmployee(id: number, employee: Employee): Observable<Employee> {
+    return this.http.put<Employee>(`${this.apiUrl}/${id}`, employee, {
+      headers: this.getHeaders(),
+    });
+  }
 
-        return this.http.post(
-            this.apiUrl + '/import',
-            formData,
-            { responseType: 'text' }
-        );
+  // Delete Employee
+  deleteEmployee(id: number): Observable<string> {
+    return this.http.delete(`${this.apiUrl}/${id}`, {
+      headers: this.getHeaders(),
+      responseType: 'text',
+    });
+  }
 
-    }
-    importExcel(file: File) {
+  importExcel1(file: File) {
+    const formData = new FormData();
 
-  const formData = new FormData();
+    formData.append('file', file);
 
-  formData.append('file', file);
+    return this.http.post(this.apiUrl + '/import', formData, { responseType: 'text' });
+  }
+  importExcel(file: File) {
+    const formData = new FormData();
 
-  return this.http.post(
-    `${this.apiUrl}/import`,
-    formData,
-    {
-      responseType: 'text'
-    }
-  );
+    formData.append('file', file);
 
-}
+    return this.http.post(`${this.apiUrl}/import`, formData, {
+      responseType: 'text',
+    });
+  }
+
+  createLoginAccount(employeeId: number) {
+    return this.http.post(`${API_URL}/users/employee/${employeeId}/account`, {});
+  }
+
+  resetEmployeePassword(employeeId: number) {
+    return this.http.put(`${API_URL}/users/employee/${employeeId}/reset-password`, {});
+  }
+
+  disableEmployeeLogin(employeeId: number) {
+    return this.http.put(`${API_URL}/users/employee/${employeeId}/disable`, {});
+  }
+
+  enableEmployeeLogin(employeeId: number) {
+    return this.http.put(`${API_URL}/users/employee/${employeeId}/enable`, {});
+  }
 }

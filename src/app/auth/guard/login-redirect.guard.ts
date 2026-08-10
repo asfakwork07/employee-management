@@ -11,7 +11,7 @@ export const loginRedirectGuard: CanActivateFn = () => {
 
   if(token){
 
-    router.navigate(['/home']);
+    router.navigate(['/dashboard']);
     return false;
 
   }

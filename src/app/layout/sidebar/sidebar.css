@@ -1,0 +1,47 @@
+.menu-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    padding:14px 24px;
+
+    color:#cbd5e1;
+
+    transition:.3s;
+
+    text-decoration:none;
+
+    font-weight:500;
+
+}
+
+.menu-item:hover{
+
+    background:#1e293b;
+
+    color:white;
+
+}
+
+.active-menu{
+
+    background:#2563eb;
+
+    color:white;
+
+    border-left:4px solid white;
+
+}
+
+.menu-item i{
+
+    font-size:20px;
+
+    width:24px;
+
+    text-align:center;
+
+}
