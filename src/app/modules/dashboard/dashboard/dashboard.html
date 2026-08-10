@@ -1,0 +1,950 @@
+<div class="space-y-6">
+  <div
+    *ngIf="loading"
+    class="bg-white rounded-xl border border-gray-200 shadow-sm p-14 text-center text-gray-500"
+  >
+    <i class="bi bi-arrow-repeat inline-block animate-spin mr-2"></i>
+    Loading dashboard...
+  </div>
+
+  <!-- ===================================================== -->
+  <!-- ADMIN DASHBOARD -->
+  <!-- ===================================================== -->
+
+  <ng-container *ngIf="!loading && dashboard && role === 'ADMIN'">
+    <!-- ADMIN SUMMARY -->
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-5">
+      <div
+        class="bg-white rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-blue-500 p-5"
+      >
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-500">Total Employees</p>
+
+            <h2 class="text-3xl font-bold text-blue-600 mt-2">
+              {{ dashboard?.totalEmployees || 0 }}
+            </h2>
+          </div>
+
+          <div
+            class="w-11 h-11 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center"
+          >
+            <i class="bi bi-people-fill text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="bg-white rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-green-500 p-5"
+      >
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-500">Present Today</p>
+
+            <h2 class="text-3xl font-bold text-green-600 mt-2">
+              {{ dashboard?.presentToday || 0 }}
+            </h2>
+          </div>
+
+          <div
+            class="w-11 h-11 rounded-full bg-green-100 text-green-600 flex items-center justify-center"
+          >
+            <i class="bi bi-person-check-fill text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="bg-white rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-red-500 p-5"
+      >
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-500">Absent Today</p>
+
+            <h2 class="text-3xl font-bold text-red-600 mt-2">
+              {{ dashboard?.absentToday || 0 }}
+            </h2>
+          </div>
+
+          <div
+            class="w-11 h-11 rounded-full bg-red-100 text-red-600 flex items-center justify-center"
+          >
+            <i class="bi bi-person-x-fill text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="bg-white rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-yellow-500 p-5"
+      >
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-500">Pending Leaves</p>
+
+            <h2 class="text-3xl font-bold text-yellow-500 mt-2">
+              {{ dashboard?.pendingLeaves || 0 }}
+            </h2>
+          </div>
+
+          <div
+            class="w-11 h-11 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center"
+          >
+            <i class="bi bi-hourglass-split text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="bg-white rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-purple-500 p-5"
+      >
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-500">Monthly Payroll</p>
+
+            <h2 class="text-2xl font-bold text-purple-600 mt-2">
+              ₹{{ dashboard?.monthlyPayroll | number: '1.0-0' }}
+            </h2>
+          </div>
+
+          <div
+            class="w-11 h-11 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center"
+          >
+            <i class="bi bi-wallet2 text-xl"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN QUICK ACTIONS -->
+
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-semibold text-slate-800">Quick Actions</h2>
+
+          <!-- <p class="text-sm text-gray-500 mt-1">Manage common HR operations</p> -->
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+          <button
+            type="button"
+            (click)="navigateTo('/employees')"
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition"
+          >
+            <i class="bi bi-person-plus"></i>
+            Add Employee
+          </button>
+
+          <button
+            type="button"
+            (click)="navigateTo('/leaves')"
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-gray-300 hover:bg-gray-50 text-slate-700 text-sm font-semibold transition"
+          >
+            <i class="bi bi-calendar-check"></i>
+            Review Leaves
+          </button>
+
+          <button
+            type="button"
+            (click)="navigateTo('/attendance')"
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-gray-300 hover:bg-gray-50 text-slate-700 text-sm font-semibold transition"
+          >
+            <i class="bi bi-clock-history"></i>
+            Attendance
+          </button>
+
+          <button
+            type="button"
+            (click)="navigateTo('/salary')"
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-gray-300 hover:bg-gray-50 text-slate-700 text-sm font-semibold transition"
+          >
+            <i class="bi bi-wallet2"></i>
+            Generate Salary
+          </button>
+
+          <button
+            type="button"
+            (click)="navigateTo('/holidays')"
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-gray-300 hover:bg-gray-50 text-slate-700 text-sm font-semibold transition"
+          >
+            <i class="bi bi-calendar-event"></i>
+            Holidays
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- UPCOMING HOLIDAY -->
+
+    <ng-container *ngTemplateOutlet="upcomingHolidayTemplate"> </ng-container>
+
+    <!-- ADMIN CHARTS -->
+
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+        <div class="mb-5">
+          <h2 class="text-lg font-semibold text-slate-800">Employees by Department</h2>
+
+          <p class="text-sm text-gray-500 mt-1">Current employee distribution</p>
+        </div>
+
+        <div class="h-80">
+          <canvas
+            baseChart
+            [data]="departmentChartData"
+            [options]="departmentChartOptions"
+            [type]="'bar'"
+          >
+          </canvas>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+        <div class="mb-5">
+          <h2 class="text-lg font-semibold text-slate-800">Leave Overview</h2>
+
+          <p class="text-sm text-gray-500 mt-1">Pending, approved and rejected requests</p>
+        </div>
+
+        <div class="h-80">
+          <canvas
+            baseChart
+            [data]="leaveChartData"
+            [options]="leaveChartOptions"
+            [type]="'doughnut'"
+          >
+          </canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAYROLL + NOTIFICATIONS -->
+
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
+      <div class="xl:col-span-2 bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+        <div class="mb-5">
+          <h2 class="text-lg font-semibold text-slate-800">Monthly Payroll Trend</h2>
+
+          <p class="text-sm text-gray-500 mt-1">Payroll expense across the current year</p>
+        </div>
+
+        <div class="h-80">
+          <canvas
+            baseChart
+            [data]="payrollChartData"
+            [options]="payrollChartOptions"
+            [type]="'line'"
+          >
+          </canvas>
+        </div>
+      </div>
+
+      <div>
+        <ng-container *ngTemplateOutlet="recentNotificationTemplate"> </ng-container>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- ===================================================== -->
+  <!-- EMPLOYEE DASHBOARD -->
+  <!-- ===================================================== -->
+
+  <ng-container *ngIf="!loading && dashboard && role === 'EMPLOYEE'">
+    <!-- WELCOME -->
+
+    <div class="bg-blue-50 border border-blue-100 rounded-xl p-5">
+      <div class="flex items-center gap-4">
+        <div
+          class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center text-lg font-bold"
+        >
+          {{ employeeName ? employeeName.charAt(0) : 'E' }}
+        </div>
+
+        <div>
+          <p class="text-xs text-blue-600">Welcome back</p>
+
+          <h2 class="font-bold text-lg text-slate-800">
+            {{ dashboard?.employeeName || employeeName }}
+          </h2>
+
+          <p class="text-sm text-gray-500">
+            {{ designation }}
+            •
+            {{ department }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- MY AI SUMMARY -->
+
+    <div
+      *ngIf="role === 'EMPLOYEE'"
+      class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden"
+    >
+      <div class="px-5 py-4 border-b border-gray-200 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div
+            class="w-11 h-11 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center"
+          >
+            <i class="bi bi-stars text-xl"></i>
+          </div>
+
+          <div>
+            <h2 class="text-lg font-semibold text-slate-800">My AI Summary</h2>
+
+            <p class="text-sm text-gray-500 mt-1">Monthly attendance and leave activity summary</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-5 space-y-5">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+          <div>
+            <label class="block text-sm font-semibold text-slate-600 mb-2"> Month </label>
+
+            <select
+              [(ngModel)]="selectedAiMonth"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+            >
+              <option *ngFor="let month of aiMonths" [ngValue]="month.value">
+                {{ month.name }}
+              </option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-slate-600 mb-2"> Year </label>
+
+            <select
+              [(ngModel)]="selectedAiYear"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+            >
+              <option *ngFor="let year of aiYears" [ngValue]="year">
+                {{ year }}
+              </option>
+            </select>
+          </div>
+
+          <button
+            type="button"
+            (click)="generateMyAiSummary()"
+            [disabled]="aiSummaryLoading"
+            class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg bg-purple-600 hover:bg-purple-700 disabled:bg-purple-300 text-white font-semibold transition"
+          >
+            <i *ngIf="aiSummaryLoading" class="bi bi-arrow-repeat animate-spin"></i>
+
+            <i *ngIf="!aiSummaryLoading" class="bi bi-stars"></i>
+
+            {{ aiSummaryLoading ? 'Generating...' : 'Generate Summary' }}
+          </button>
+        </div>
+
+        <div *ngIf="aiSummaryLoading" class="py-10 text-center text-gray-500">
+          <i class="bi bi-stars animate-pulse text-2xl text-purple-600"></i>
+
+          <p class="mt-3 font-semibold">Generating your summary...</p>
+        </div>
+
+        <div *ngIf="!aiSummaryLoading && aiSummary" class="space-y-5">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-green-50 border border-green-100 rounded-xl p-4">
+              <p class="text-xs text-gray-500">Present</p>
+
+              <p class="text-2xl font-bold text-green-600 mt-1">
+                {{ aiSummary.presentDays || 0 }}
+              </p>
+            </div>
+
+            <div class="bg-yellow-50 border border-yellow-100 rounded-xl p-4">
+              <p class="text-xs text-gray-500">Late</p>
+
+              <p class="text-2xl font-bold text-yellow-600 mt-1">
+                {{ aiSummary.lateDays || 0 }}
+              </p>
+            </div>
+
+            <div class="bg-orange-50 border border-orange-100 rounded-xl p-4">
+              <p class="text-xs text-gray-500">Half Day</p>
+
+              <p class="text-2xl font-bold text-orange-600 mt-1">
+                {{ aiSummary.halfDays || 0 }}
+              </p>
+            </div>
+
+            <div class="bg-blue-50 border border-blue-100 rounded-xl p-4">
+              <p class="text-xs text-gray-500">Approved Leave</p>
+
+              <p class="text-2xl font-bold text-blue-600 mt-1">
+                {{ aiSummary.approvedLeaveDays || 0 }}
+              </p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="border border-gray-200 rounded-xl p-4">
+              <p class="text-sm text-gray-500">Total Working Hours</p>
+
+              <p class="text-2xl font-bold text-slate-800 mt-1">
+                {{ aiSummary.totalWorkingHours | number: '1.2-2' }}
+                hrs
+              </p>
+            </div>
+
+            <div class="border border-gray-200 rounded-xl p-4">
+              <p class="text-sm text-gray-500">Average Recorded Hours</p>
+
+              <p class="text-2xl font-bold text-slate-800 mt-1">
+                {{ aiSummary.averageWorkingHours | number: '1.2-2' }}
+                hrs
+              </p>
+            </div>
+          </div>
+          <div class="border border-purple-200 rounded-xl overflow-hidden">
+            <div
+              class="px-5 py-4 bg-purple-50 border-b border-purple-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-9 h-9 rounded-lg bg-purple-600 text-white flex items-center justify-center"
+                >
+                  <i class="bi bi-stars"></i>
+                </div>
+
+                <div>
+                  <h3 class="font-semibold text-slate-800">AI Generated Summary</h3>
+
+                  <p class="text-xs text-gray-500 mt-0.5">Based on your recorded activity</p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                (click)="regenerateMyAiSummary()"
+                [disabled]="aiSummaryLoading"
+                class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-purple-200 bg-white text-purple-700 text-sm font-semibold hover:bg-purple-100 disabled:opacity-50 disabled:cursor-not-allowed transition cursor-pointer"
+              >
+                <i class="bi bi-arrow-clockwise" [class.animate-spin]="aiSummaryLoading"></i>
+
+                {{ aiSummaryLoading ? 'Regenerating...' : 'Regenerate' }}
+              </button>
+            </div>
+
+            <div class="p-5">
+              <p class="text-[15px] leading-7 text-slate-700 whitespace-pre-line">
+                {{ aiSummary.summary }}
+              </p>
+            </div>
+
+            <div class="px-5 py-3 bg-gray-50 border-t border-gray-100">
+              <p class="text-xs text-gray-400 flex items-start gap-2">
+                <i class="bi bi-info-circle mt-0.5"></i>
+
+                This summary describes recorded activity only and should not be used as an automated
+                employment decision or employee rating.
+              </p>
+            </div>
+          </div>
+          <!-- <div class="border border-purple-200 rounded-xl overflow-hidden">
+            <div class="px-5 py-4 bg-purple-50 border-b border-purple-100 flex items-center gap-3">
+              <div
+                class="w-9 h-9 rounded-lg bg-purple-600 text-white flex items-center justify-center"
+              >
+                <i class="bi bi-stars"></i>
+              </div>
+
+              <div>
+                <h3 class="font-semibold text-slate-800">AI Generated Summary</h3>
+
+                <p class="text-xs text-gray-500 mt-0.5">Based on your recorded activity</p>
+              </div>
+            </div>
+
+            <div class="p-5">
+              <p class="text-[15px] leading-7 text-slate-700 whitespace-pre-line">
+                {{ aiSummary.summary }}
+              </p>
+            </div>
+          </div> -->
+        </div>
+
+        <div *ngIf="!aiSummaryLoading && !aiSummary" class="py-8 text-center text-gray-500">
+          Select month and year and generate your monthly AI summary.
+        </div>
+      </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+      <div class="mb-4">
+        <h2 class="text-lg font-semibold text-slate-800">Quick Actions</h2>
+
+        <p class="text-sm text-gray-500 mt-1">Access frequently used features</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
+        <button
+          type="button"
+          (click)="navigateTo('/attendance')"
+          class="flex items-center gap-3 p-4 rounded-xl border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition text-left"
+        >
+          <div
+            class="w-10 h-10 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center shrink-0"
+          >
+            <i class="bi bi-clock-history"></i>
+          </div>
+
+          <div>
+            <p class="font-semibold text-slate-700">Attendance</p>
+
+            <p class="text-xs text-gray-500 mt-0.5">Check in / out</p>
+          </div>
+        </button>
+
+        <button
+          type="button"
+          (click)="navigateTo('/leaves')"
+          class="flex items-center gap-3 p-4 rounded-xl border border-gray-200 hover:border-green-300 hover:bg-green-50 transition text-left"
+        >
+          <div
+            class="w-10 h-10 rounded-lg bg-green-100 text-green-600 flex items-center justify-center shrink-0"
+          >
+            <i class="bi bi-calendar-plus"></i>
+          </div>
+
+          <div>
+            <p class="font-semibold text-slate-700">Apply Leave</p>
+
+            <p class="text-xs text-gray-500 mt-0.5">New request</p>
+          </div>
+        </button>
+
+        <button
+          type="button"
+          (click)="navigateTo('/salary')"
+          class="flex items-center gap-3 p-4 rounded-xl border border-gray-200 hover:border-purple-300 hover:bg-purple-50 transition text-left"
+        >
+          <div
+            class="w-10 h-10 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center shrink-0"
+          >
+            <i class="bi bi-wallet2"></i>
+          </div>
+
+          <div>
+            <p class="font-semibold text-slate-700">My Salary</p>
+
+            <p class="text-xs text-gray-500 mt-0.5">View payslips</p>
+          </div>
+        </button>
+
+        <button
+          type="button"
+          (click)="navigateTo('/leaves')"
+          class="flex items-center gap-3 p-4 rounded-xl border border-gray-200 hover:border-orange-300 hover:bg-orange-50 transition text-left"
+        >
+          <div
+            class="w-10 h-10 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center shrink-0"
+          >
+            <i class="bi bi-calendar-check"></i>
+          </div>
+
+          <div>
+            <p class="font-semibold text-slate-700">Leave History</p>
+
+            <p class="text-xs text-gray-500 mt-0.5">Track requests</p>
+          </div>
+        </button>
+
+        <button
+          type="button"
+          (click)="navigateTo('/holidays')"
+          class="flex items-center gap-3 p-4 rounded-xl border border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 transition text-left"
+        >
+          <div
+            class="w-10 h-10 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0"
+          >
+            <i class="bi bi-calendar-event"></i>
+          </div>
+
+          <div>
+            <p class="font-semibold text-slate-700">Holidays</p>
+
+            <p class="text-xs text-gray-500 mt-0.5">Company calendar</p>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- SUMMARY CARDS -->
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-5">
+      <div
+        class="bg-white rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-green-500 p-5"
+      >
+        <p class="text-sm text-gray-500">Today's Status</p>
+
+        <h2
+          class="text-xl font-bold mt-2"
+          [ngClass]="{
+            'text-green-600': dashboard?.attendanceStatus === 'PRESENT',
+
+            'text-yellow-600': dashboard?.attendanceStatus === 'LATE',
+
+            'text-orange-600': dashboard?.attendanceStatus === 'HALF_DAY',
+
+            'text-indigo-600': dashboard?.attendanceStatus === 'HOLIDAY',
+
+            'text-red-600':
+              dashboard?.attendanceStatus === 'ABSENT' ||
+              dashboard?.attendanceStatus === 'SHORT_HOURS',
+          }"
+        >
+          {{ dashboard?.attendanceStatus || 'ABSENT' }}
+        </h2>
+      </div>
+
+      <div
+        class="bg-white rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-blue-500 p-5"
+      >
+        <p class="text-sm text-gray-500">Check In</p>
+
+        <h2 class="text-xl font-bold text-slate-800 mt-2">
+          {{ dashboard?.checkIn || '--' }}
+        </h2>
+      </div>
+
+      <div
+        class="bg-white rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-orange-500 p-5"
+      >
+        <p class="text-sm text-gray-500">Check Out</p>
+
+        <h2 class="text-xl font-bold text-slate-800 mt-2">
+          {{ dashboard?.checkOut || '--' }}
+        </h2>
+      </div>
+
+      <div
+        class="bg-white rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-yellow-500 p-5"
+      >
+        <p class="text-sm text-gray-500">My Pending Leaves</p>
+
+        <h2 class="text-3xl font-bold text-yellow-500 mt-2">
+          {{ dashboard?.myPendingLeaves || 0 }}
+        </h2>
+      </div>
+
+      <div
+        class="bg-white rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-purple-500 p-5"
+      >
+        <p class="text-sm text-gray-500">Latest Net Salary</p>
+
+        <h2 class="text-xl font-bold text-purple-600 mt-2">
+          ₹{{ dashboard?.latestNetSalary | number: '1.0-0' }}
+        </h2>
+      </div>
+    </div>
+
+    <!-- UPCOMING HOLIDAY -->
+
+    <ng-container *ngTemplateOutlet="upcomingHolidayTemplate"> </ng-container>
+
+    <!-- EMPLOYEE ACTIVITY -->
+
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
+      <div class="xl:col-span-2 space-y-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <div class="flex items-center justify-between gap-4">
+            <div>
+              <p class="text-sm text-gray-500">Today's Working Hours</p>
+
+              <h2 class="text-3xl font-bold text-slate-800 mt-2">
+                {{ dashboard?.workingHours | number: '1.2-2' }}
+
+                <span class="text-lg font-semibold text-gray-500"> hrs </span>
+              </h2>
+
+              <p class="text-sm text-gray-400 mt-2">Total working time recorded today</p>
+            </div>
+
+            <div
+              class="w-14 h-14 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0"
+            >
+              <i class="bi bi-clock-history text-2xl"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- ATTENDANCE DETAIL -->
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <div class="mb-5">
+            <h2 class="text-lg font-semibold text-slate-800">Today's Attendance</h2>
+
+            <p class="text-sm text-gray-500 mt-1">Your attendance activity for today</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="bg-slate-50 rounded-xl p-4">
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center"
+                >
+                  <i class="bi bi-person-check"></i>
+                </div>
+
+                <div>
+                  <p class="text-xs text-gray-500">Status</p>
+
+                  <p
+                    class="font-bold mt-1"
+                    [ngClass]="{
+                      'text-green-600': dashboard?.attendanceStatus === 'PRESENT',
+
+                      'text-yellow-600': dashboard?.attendanceStatus === 'LATE',
+
+                      'text-orange-600': dashboard?.attendanceStatus === 'HALF_DAY',
+
+                      'text-indigo-600': dashboard?.attendanceStatus === 'HOLIDAY',
+
+                      'text-red-600':
+                        dashboard?.attendanceStatus === 'ABSENT' ||
+                        dashboard?.attendanceStatus === 'SHORT_HOURS',
+                    }"
+                  >
+                    {{ dashboard?.attendanceStatus || 'ABSENT' }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-slate-50 rounded-xl p-4">
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center"
+                >
+                  <i class="bi bi-box-arrow-in-right"></i>
+                </div>
+
+                <div>
+                  <p class="text-xs text-gray-500">Check In</p>
+
+                  <p class="font-bold text-slate-800 mt-1">
+                    {{ dashboard?.checkIn || '--' }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-slate-50 rounded-xl p-4">
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center"
+                >
+                  <i class="bi bi-box-arrow-right"></i>
+                </div>
+
+                <div>
+                  <p class="text-xs text-gray-500">Check Out</p>
+
+                  <p class="font-bold text-slate-800 mt-1">
+                    {{ dashboard?.checkOut || '--' }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <ng-container *ngTemplateOutlet="recentNotificationTemplate"> </ng-container>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- ===================================================== -->
+  <!-- UPCOMING HOLIDAY TEMPLATE -->
+  <!-- ===================================================== -->
+
+  <ng-template #upcomingHolidayTemplate>
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div class="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
+        <div>
+          <h2 class="text-lg font-semibold text-slate-800">Upcoming Holiday</h2>
+
+          <p class="text-sm text-gray-500 mt-1">Next company holiday</p>
+        </div>
+
+        <button
+          type="button"
+          (click)="navigateTo('/holidays')"
+          class="w-11 h-11 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center hover:bg-indigo-200 transition"
+          title="View Holidays"
+        >
+          <i class="bi bi-calendar-event text-xl"></i>
+        </button>
+      </div>
+
+      <!-- HOLIDAY LOADING -->
+
+      <div *ngIf="holidayLoading" class="py-10 text-center text-gray-500">
+        <i class="bi bi-arrow-repeat inline-block animate-spin mr-2"></i>
+
+        Loading holiday...
+      </div>
+
+      <!-- HOLIDAY FOUND -->
+
+      <div *ngIf="!holidayLoading && upcomingHoliday" class="p-5">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
+          <div class="flex items-center gap-4">
+            <div
+              class="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 flex flex-col items-center justify-center shrink-0"
+            >
+              <span class="text-xl font-bold leading-none">
+                {{ upcomingHoliday.holidayDate | date: 'dd' }}
+              </span>
+
+              <span class="text-xs font-bold uppercase mt-1">
+                {{ upcomingHoliday.holidayDate | date: 'MMM' }}
+              </span>
+            </div>
+
+            <div>
+              <h3 class="text-lg font-bold text-slate-800">
+                {{ upcomingHoliday.name }}
+              </h3>
+
+              <p class="text-sm text-gray-500 mt-1">
+                {{ upcomingHoliday.holidayDate | date: 'EEEE, dd MMM yyyy' }}
+              </p>
+
+              <p *ngIf="upcomingHoliday.description" class="text-sm text-gray-600 mt-2">
+                {{ upcomingHoliday.description }}
+              </p>
+            </div>
+          </div>
+
+          <div class="flex flex-col items-start sm:items-end gap-2">
+            <span
+              class="inline-flex items-center px-3 py-1.5 rounded-full bg-indigo-100 text-indigo-700 text-xs font-semibold"
+            >
+              {{ upcomingHoliday.type }}
+            </span>
+
+            <button
+              type="button"
+              (click)="navigateTo('/holidays')"
+              class="text-sm font-semibold text-blue-600 hover:text-blue-700"
+            >
+              View calendar
+              <i class="bi bi-arrow-right ml-1"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- NO HOLIDAY -->
+
+      <div *ngIf="!holidayLoading && !upcomingHoliday" class="py-10 px-5 text-center">
+        <div
+          class="w-12 h-12 mx-auto rounded-full bg-gray-100 text-gray-400 flex items-center justify-center"
+        >
+          <i class="bi bi-calendar-check text-xl"></i>
+        </div>
+
+        <p class="font-semibold text-slate-700 mt-3">No upcoming holidays</p>
+
+        <p class="text-sm text-gray-500 mt-1">
+          No future company holidays are currently scheduled.
+        </p>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- ===================================================== -->
+  <!-- RECENT NOTIFICATION TEMPLATE -->
+  <!-- ===================================================== -->
+
+  <ng-template #recentNotificationTemplate>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div class="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
+        <div>
+          <h2 class="text-lg font-semibold text-slate-800">Recent Notifications</h2>
+
+          <p class="text-sm text-gray-500 mt-1">Latest account and HR activity</p>
+        </div>
+
+        <div
+          class="w-10 h-10 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center"
+        >
+          <i class="bi bi-bell"></i>
+        </div>
+      </div>
+
+      <div *ngIf="notificationLoading" class="py-12 text-center text-gray-500">
+        <i class="bi bi-arrow-repeat inline-block animate-spin mr-2"></i>
+
+        Loading...
+      </div>
+
+      <div
+        *ngIf="!notificationLoading && recentNotifications.length === 0"
+        class="py-12 px-5 text-center"
+      >
+        <div
+          class="w-12 h-12 mx-auto rounded-full bg-gray-100 text-gray-400 flex items-center justify-center"
+        >
+          <i class="bi bi-bell-slash text-xl"></i>
+        </div>
+
+        <p class="font-semibold text-slate-700 mt-3">No notifications</p>
+
+        <p class="text-sm text-gray-500 mt-1">You're all caught up.</p>
+      </div>
+
+      <div
+        *ngIf="!notificationLoading && recentNotifications.length > 0"
+        class="divide-y divide-gray-100 max-h-[360px] overflow-y-auto"
+      >
+        <div
+          *ngFor="let notification of recentNotifications"
+          class="px-5 py-4 flex items-start gap-3 hover:bg-slate-50 transition"
+          [ngClass]="{
+            'bg-blue-50/40': !notification.read,
+          }"
+        >
+          <div
+            class="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
+            [ngClass]="getNotificationClass(notification.type)"
+          >
+            <i class="bi" [ngClass]="getNotificationIcon(notification.type)"></i>
+          </div>
+
+          <div class="flex-1 min-w-0">
+            <div class="flex items-start justify-between gap-2">
+              <p class="text-sm font-semibold text-slate-800">
+                {{ notification.title }}
+              </p>
+
+              <span
+                *ngIf="!notification.read"
+                class="w-2 h-2 mt-1.5 rounded-full bg-blue-600 shrink-0"
+              ></span>
+            </div>
+
+            <p class="text-sm text-gray-600 mt-1 leading-5">
+              {{ notification.message }}
+            </p>
+
+            <p class="text-xs text-gray-400 mt-2">
+              {{ notification.createdAt | date: 'dd MMM yyyy, hh:mm a' }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

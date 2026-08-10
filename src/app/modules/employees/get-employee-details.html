@@ -1,0 +1,1537 @@
+<div class="space-y-6">
+  <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-800">Employees</h1>
+
+      <p class="text-sm text-gray-500 mt-1">
+        Manage employee profiles, accounts and organization details
+      </p>
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+      <button
+        type="button"
+        (click)="showImportModals()"
+        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-gray-300 bg-white text-slate-700 font-medium hover:bg-gray-50 transition"
+      >
+        <i class="bi bi-file-earmark-excel text-green-600"></i>
+        Import Excel
+      </button>
+
+      <button
+        type="button"
+        (click)="openAddModal()"
+        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-sm transition"
+      >
+        <i class="bi bi-person-plus"></i>
+        Add Employee
+      </button>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+    <div
+      class="bg-white rounded-xl border border-gray-200 border-l-4 border-l-blue-500 shadow-sm p-5"
+    >
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500">Total Employees</p>
+
+          <h2 class="text-3xl font-bold text-blue-600 mt-2">
+            {{ totalEmployees }}
+          </h2>
+        </div>
+
+        <div
+          class="w-11 h-11 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center"
+        >
+          <i class="bi bi-people-fill text-xl"></i>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="bg-white rounded-xl border border-gray-200 border-l-4 border-l-green-500 shadow-sm p-5"
+    >
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500">Active Employees</p>
+
+          <h2 class="text-3xl font-bold text-green-600 mt-2">
+            {{ activeEmployees }}
+          </h2>
+        </div>
+
+        <div
+          class="w-11 h-11 rounded-full bg-green-100 text-green-600 flex items-center justify-center"
+        >
+          <i class="bi bi-person-check-fill text-xl"></i>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="bg-white rounded-xl border border-gray-200 border-l-4 border-l-red-500 shadow-sm p-5"
+    >
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500">Inactive Employees</p>
+
+          <h2 class="text-3xl font-bold text-red-600 mt-2">
+            {{ inactiveEmployees }}
+          </h2>
+        </div>
+
+        <div
+          class="w-11 h-11 rounded-full bg-red-100 text-red-600 flex items-center justify-center"
+        >
+          <i class="bi bi-person-x-fill text-xl"></i>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="bg-white rounded-xl border border-gray-200 border-l-4 border-l-purple-500 shadow-sm p-5"
+    >
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500">Login Enabled</p>
+
+          <h2 class="text-3xl font-bold text-purple-600 mt-2">
+            {{ loginEnabledEmployees }}
+          </h2>
+        </div>
+
+        <div
+          class="w-11 h-11 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center"
+        >
+          <i class="bi bi-shield-check text-xl"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-5">
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4">
+      <div class="xl:col-span-2">
+        <label class="block text-sm font-semibold text-slate-600 mb-2"> Search Employee </label>
+
+        <div class="relative">
+          <i class="bi bi-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+
+          <input
+            type="text"
+            [(ngModel)]="searchText"
+            (input)="searchEmployee()"
+            placeholder="Name, email, phone or designation..."
+            class="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold text-slate-600 mb-2"> Department </label>
+
+        <select
+          [(ngModel)]="selectedDepartment"
+          (change)="applyFilters()"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="ALL">All Departments</option>
+
+          <option *ngFor="let department of departments" [value]="department">
+            {{ department }}
+          </option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold text-slate-600 mb-2"> Status </label>
+
+        <select
+          [(ngModel)]="selectedStatus"
+          (change)="applyFilters()"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white"
+        >
+          <option value="ALL">All Status</option>
+
+          <option value="Active">Active</option>
+
+          <option value="Inactive">Inactive</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold text-slate-600 mb-2"> Login </label>
+
+        <div class="flex gap-2">
+          <select
+            [(ngModel)]="selectedLoginStatus"
+            (change)="applyFilters()"
+            class="flex-1 px-4 py-3 border border-gray-300 rounded-lg bg-white"
+          >
+            <option value="ALL">All</option>
+
+            <option value="ACTIVE">Login Active</option>
+
+            <option value="DISABLED">Login Disabled</option>
+
+            <option value="NO_LOGIN">No Login</option>
+          </select>
+
+          <button
+            type="button"
+            (click)="resetFilters()"
+            title="Reset Filters"
+            class="w-12 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100"
+          >
+            <i class="bi bi-arrow-counterclockwise"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+    <div
+      class="px-5 py-4 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
+    >
+      <div>
+        <h2 class="text-lg font-semibold text-slate-800">Employee Directory</h2>
+
+        <p class="text-sm text-gray-500 mt-1">View and manage employee information</p>
+      </div>
+
+      <span class="text-sm text-gray-500">
+        Showing
+        <strong class="text-slate-700">
+          {{ filteredEmployees.length }}
+        </strong>
+        employees
+      </span>
+    </div>
+
+    <div *ngIf="loading" class="p-14 text-center text-gray-500">
+      <i class="bi bi-arrow-repeat inline-block animate-spin mr-2"></i>
+
+      Loading employees...
+    </div>
+
+    <div *ngIf="!loading" class="overflow-x-auto">
+      <table class="w-full min-w-[1250px]">
+        <thead class="bg-slate-800 text-white">
+          <tr>
+            <th class="px-5 py-4 text-left text-sm font-semibold">Employee</th>
+
+            <th
+              (click)="sort('department')"
+              class="px-5 py-4 text-left text-sm font-semibold cursor-pointer"
+            >
+              Department
+            </th>
+
+            <th class="px-5 py-4 text-left text-sm font-semibold">Designation</th>
+
+            <th class="px-5 py-4 text-left text-sm font-semibold">Phone</th>
+
+            <th
+              (click)="sort('salary')"
+              class="px-5 py-4 text-right text-sm font-semibold cursor-pointer"
+            >
+              Salary
+            </th>
+
+            <th class="px-5 py-4 text-left text-sm font-semibold">Joining Date</th>
+
+            <th class="px-5 py-4 text-center text-sm font-semibold">Status</th>
+
+            <th class="px-5 py-4 text-center text-sm font-semibold">Login</th>
+
+            <th class="px-5 py-4 text-center text-sm font-semibold">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr
+            *ngFor="let employee of paginatedEmployees"
+            class="border-b border-gray-100 hover:bg-slate-50 transition"
+          >
+            <td class="px-5 py-4">
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-11 h-11 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold shrink-0"
+                >
+                  {{ employee.firstName?.charAt(0) }}
+                  {{ employee.lastName?.charAt(0) }}
+                </div>
+
+                <div>
+                  <button
+                    type="button"
+                    (click)="viewEmployee(employee)"
+                    class="font-semibold text-slate-800 hover:text-blue-600"
+                  >
+                    {{ employee.firstName }}
+                    {{ employee.lastName }}
+                  </button>
+
+                  <p class="text-sm text-gray-500 mt-0.5">
+                    {{ employee.email }}
+                  </p>
+
+                  <p class="text-xs text-gray-400 mt-0.5">ID #{{ employee.id }}</p>
+                </div>
+              </div>
+            </td>
+
+            <td class="px-5 py-4">
+              <span class="inline-flex px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-sm">
+                {{ employee.department }}
+              </span>
+            </td>
+
+            <td class="px-5 py-4 text-slate-600">
+              {{ employee.designation }}
+            </td>
+
+            <td class="px-5 py-4 text-slate-600">
+              {{ employee.phone }}
+            </td>
+
+            <td class="px-5 py-4 text-right font-semibold text-green-700">
+              ₹{{ employee.salary | number: '1.0-0' }}
+            </td>
+
+            <td class="px-5 py-4 text-slate-600">
+              {{ employee.joiningDate | date: 'dd MMM yyyy' }}
+            </td>
+
+            <td class="px-5 py-4 text-center">
+              <span
+                class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold"
+                [ngClass]="{
+                  'bg-green-100 text-green-700': employee.status === 'Active',
+                  'bg-red-100 text-red-700': employee.status === 'Inactive',
+                }"
+              >
+                {{ employee.status }}
+              </span>
+            </td>
+
+            <td class="px-5 py-4 text-center">
+              <span
+                *ngIf="!employee.loginEnabled"
+                class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-xs font-semibold"
+              >
+                <i class="bi bi-person-x"></i>
+                No Login
+              </span>
+
+              <span
+                *ngIf="employee.loginEnabled && employee.accountEnabled"
+                class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold"
+              >
+                <i class="bi bi-check-circle-fill"></i>
+                Active
+              </span>
+
+              <span
+                *ngIf="employee.loginEnabled && !employee.accountEnabled"
+                class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-semibold"
+              >
+                <i class="bi bi-slash-circle"></i>
+                Disabled
+              </span>
+            </td>
+
+            <td class="px-5 py-4">
+              <div class="flex items-center justify-center gap-2">
+                <button
+                  type="button"
+                  (click)="viewEmployee(employee)"
+                  title="View Employee"
+                  class="w-9 h-9 flex items-center justify-center rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 transition"
+                >
+                  <i class="bi bi-eye"></i>
+                </button>
+
+                <button
+                  type="button"
+                  (click)="editEmployee(employee)"
+                  title="Edit Employee"
+                  class="w-9 h-9 flex items-center justify-center rounded-lg bg-yellow-100 text-yellow-700 hover:bg-yellow-200 transition"
+                >
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+
+                <button
+                  *ngIf="!employee.loginEnabled"
+                  type="button"
+                  (click)="createLogin(employee)"
+                  title="Create Login Account"
+                  class="w-9 h-9 flex items-center justify-center rounded-lg bg-purple-100 text-purple-700 hover:bg-purple-200 transition"
+                >
+                  <i class="bi bi-person-lock"></i>
+                </button>
+
+                <button
+                  *ngIf="employee.loginEnabled"
+                  type="button"
+                  (click)="resetEmployeePassword(employee)"
+                  title="Reset Employee Password"
+                  class="w-9 h-9 flex items-center justify-center rounded-lg bg-purple-100 text-purple-700 hover:bg-purple-200 transition"
+                >
+                  <i class="bi bi-key-fill"></i>
+                </button>
+
+                <button
+                  *ngIf="employee.loginEnabled && employee.accountEnabled"
+                  type="button"
+                  (click)="disableEmployeeLogin(employee)"
+                  title="Disable Login"
+                  class="w-9 h-9 flex items-center justify-center rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition"
+                >
+                  <i class="bi bi-person-slash"></i>
+                </button>
+
+                <button
+                  *ngIf="employee.loginEnabled && !employee.accountEnabled"
+                  type="button"
+                  (click)="enableEmployeeLogin(employee)"
+                  title="Enable Login"
+                  class="w-9 h-9 flex items-center justify-center rounded-lg bg-green-100 text-green-700 hover:bg-green-200 transition"
+                >
+                  <i class="bi bi-person-check"></i>
+                </button>
+
+                <button
+                  type="button"
+                  (click)="deleteEmployee(employee.id)"
+                  title="Delete Employee"
+                  class="w-9 h-9 flex items-center justify-center rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition"
+                >
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <tr *ngIf="paginatedEmployees.length === 0">
+            <td colspan="9" class="text-center py-16 text-gray-500">
+              <i class="bi bi-people text-4xl block mb-3 text-gray-400"></i>
+
+              <p class="font-medium text-slate-700">No employees found</p>
+
+              <p class="text-sm mt-1">Try changing your filters or add a new employee.</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div
+      *ngIf="!loading && filteredEmployees.length > 0"
+      class="px-5 py-4 border-t border-gray-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+    >
+      <div class="text-sm text-gray-500">
+        Showing
+
+        <strong class="text-slate-700">
+          {{ startRecord }}
+        </strong>
+
+        to
+
+        <strong class="text-slate-700">
+          {{ endRecord }}
+        </strong>
+
+        of
+
+        <strong class="text-slate-700">
+          {{ filteredEmployees.length }}
+        </strong>
+
+        employees
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          (click)="previousPage()"
+          [disabled]="currentPage === 1"
+          class="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-40"
+        >
+          Previous
+        </button>
+
+        <button
+          *ngFor="let page of pages"
+          type="button"
+          (click)="goToPage(page)"
+          class="w-9 h-9 rounded-lg"
+          [ngClass]="{
+            'bg-blue-600 text-white': page === currentPage,
+            'border border-gray-300 hover:bg-gray-50': page !== currentPage,
+          }"
+        >
+          {{ page }}
+        </button>
+
+        <button
+          type="button"
+          (click)="nextPage()"
+          [disabled]="currentPage === totalPages"
+          class="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-40"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD / EDIT MODAL -->
+
+<div
+  *ngIf="showModal"
+  class="fixed inset-0 z-[9999] bg-black/50 flex items-center justify-center p-4 overflow-y-auto"
+  (click)="closeModal()"
+>
+  <div
+    class="relative bg-white w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden max-h-[calc(100vh-2rem)] flex flex-col my-auto"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="flex items-center justify-between px-6 py-5 border-b border-gray-200">
+      <div>
+        <h2 class="text-xl font-bold text-slate-800">
+          {{ isEditMode ? 'Edit Employee' : 'Add Employee' }}
+        </h2>
+
+        <p class="text-sm text-gray-500 mt-1">
+          {{ isEditMode ? 'Update employee information' : 'Create a new employee record' }}
+        </p>
+      </div>
+
+      <button type="button" (click)="closeModal()" class="w-10 h-10 rounded-lg hover:bg-gray-100">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="p-6 overflow-y-auto">
+      <form [formGroup]="employeeForm" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div>
+          <label class="block text-sm font-semibold mb-2"> First Name </label>
+
+          <input
+            type="text"
+            formControlName="firstName"
+            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold mb-2"> Last Name </label>
+
+          <input
+            type="text"
+            formControlName="lastName"
+            class="w-full border border-gray-300 rounded-lg px-4 py-3"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold mb-2"> Email </label>
+
+          <input
+            type="email"
+            formControlName="email"
+            class="w-full border border-gray-300 rounded-lg px-4 py-3"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold mb-2"> Phone </label>
+
+          <input
+            type="text"
+            formControlName="phone"
+            class="w-full border border-gray-300 rounded-lg px-4 py-3"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold mb-2"> Department </label>
+
+          <input
+            type="text"
+            formControlName="department"
+            class="w-full border border-gray-300 rounded-lg px-4 py-3"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold mb-2"> Designation </label>
+
+          <input
+            type="text"
+            formControlName="designation"
+            class="w-full border border-gray-300 rounded-lg px-4 py-3"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold mb-2"> Salary </label>
+
+          <input
+            type="number"
+            formControlName="salary"
+            class="w-full border border-gray-300 rounded-lg px-4 py-3"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold mb-2"> Joining Date </label>
+
+          <input
+            type="date"
+            formControlName="joiningDate"
+            class="w-full border border-gray-300 rounded-lg px-4 py-3"
+          />
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="block text-sm font-semibold mb-2"> Status </label>
+
+          <select
+            formControlName="status"
+            class="w-full border border-gray-300 rounded-lg px-4 py-3 bg-white"
+          >
+            <option value="Active">Active</option>
+
+            <option value="Inactive">Inactive</option>
+          </select>
+        </div>
+      </form>
+    </div>
+
+    <div class="flex justify-end gap-3 px-6 py-4 bg-gray-50 border-t">
+      <button
+        type="button"
+        (click)="closeModal()"
+        class="px-5 py-2.5 border rounded-lg hover:bg-gray-100"
+      >
+        Cancel
+      </button>
+
+      <button
+        type="button"
+        (click)="saveEmployee()"
+        class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+      >
+        {{ isEditMode ? 'Update Employee' : 'Save Employee' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- IMPORT MODAL -->
+
+<div
+  *ngIf="showImportModal"
+  class="fixed inset-0 z-[9999] bg-black/50 flex items-center justify-center p-4"
+  (click)="closeImportModal()"
+>
+  <div
+    class="relative bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="flex justify-between items-center px-6 py-5 border-b">
+      <div>
+        <h2 class="text-xl font-bold">Import Employees</h2>
+
+        <p class="text-sm text-gray-500 mt-1">Upload .xlsx or .xls employee file</p>
+      </div>
+
+      <button type="button" (click)="closeImportModal()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="p-6">
+      <input
+        type="file"
+        accept=".xlsx,.xls"
+        (change)="onFileSelected($event)"
+        class="w-full border rounded-lg p-3"
+      />
+    </div>
+
+    <div class="flex justify-end gap-3 px-6 py-4 border-t bg-gray-50">
+      <button type="button" (click)="closeImportModal()" class="px-5 py-2 border rounded-lg">
+        Cancel
+      </button>
+
+      <button
+        type="button"
+        (click)="importExcel()"
+        class="px-5 py-2 bg-green-600 text-white rounded-lg"
+      >
+        Upload
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW EMPLOYEE MODAL -->
+
+<div
+  *ngIf="showViewModal && selectedEmployee"
+  class="fixed inset-0 z-[9999] bg-black/50 flex items-center justify-center p-4 overflow-y-auto"
+  (click)="closeViewModal()"
+>
+  <div
+    class="relative bg-white w-full max-w-5xl rounded-2xl shadow-2xl overflow-hidden max-h-[calc(100vh-2rem)] flex flex-col my-auto"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-6 shrink-0">
+      <div class="flex items-start justify-between gap-4">
+        <div class="flex items-center gap-4">
+          <div
+            class="w-16 h-16 rounded-full bg-white text-blue-600 flex items-center justify-center text-2xl font-bold"
+          >
+            {{ selectedEmployee.firstName?.charAt(0) }}
+            {{ selectedEmployee.lastName?.charAt(0) }}
+          </div>
+
+          <div>
+            <h2 class="text-2xl font-bold">
+              {{ selectedEmployee.firstName }}
+              {{ selectedEmployee.lastName }}
+            </h2>
+
+            <p class="text-blue-100 mt-1">
+              {{ selectedEmployee.designation }}
+              •
+              {{ selectedEmployee.department }}
+            </p>
+
+            <p class="text-sm text-blue-100 mt-1">Employee ID #{{ selectedEmployee.id }}</p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          (click)="closeViewModal()"
+          class="w-10 h-10 rounded-lg hover:bg-white/10"
+        >
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="flex overflow-x-auto border-b border-gray-200 bg-white shrink-0">
+      <button
+        type="button"
+        (click)="changeEmployeeTab('profile')"
+        class="px-6 py-4 text-sm font-semibold border-b-2 cursor-pointer"
+        [ngClass]="
+          activeEmployeeTab === 'profile'
+            ? 'border-blue-600 text-blue-600'
+            : 'border-transparent text-gray-500'
+        "
+      >
+        <i class="bi bi-person mr-2"></i>
+        Profile
+      </button>
+
+      <button
+        type="button"
+        (click)="changeEmployeeTab('attendance')"
+        class="px-6 py-4 text-sm font-semibold border-b-2 cursor-pointer"
+        [ngClass]="
+          activeEmployeeTab === 'attendance'
+            ? 'border-blue-600 text-blue-600'
+            : 'border-transparent text-gray-500'
+        "
+      >
+        <i class="bi bi-clock-history mr-2"></i>
+        Attendance
+      </button>
+
+      <button
+        type="button"
+        (click)="changeEmployeeTab('leaves')"
+        class="px-6 py-4 text-sm font-semibold border-b-2 cursor-pointer"
+        [ngClass]="
+          activeEmployeeTab === 'leaves'
+            ? 'border-blue-600 text-blue-600'
+            : 'border-transparent text-gray-500'
+        "
+      >
+        <i class="bi bi-calendar2-week mr-2"></i>
+        Leaves
+      </button>
+
+      <button
+        type="button"
+        (click)="changeEmployeeTab('salary')"
+        class="px-6 py-4 text-sm font-semibold border-b-2 cursor-pointer"
+        [ngClass]="
+          activeEmployeeTab === 'salary'
+            ? 'border-blue-600 text-blue-600'
+            : 'border-transparent text-gray-500'
+        "
+      >
+        <i class="bi bi-wallet2 mr-2"></i>
+        Salary
+      </button>
+
+      <button
+        type="button"
+        (click)="changeEmployeeTab('ai')"
+        class="px-6 py-4 text-sm font-semibold border-b-2 cursor-pointer whitespace-nowrap"
+        [ngClass]="
+          activeEmployeeTab === 'ai'
+            ? 'border-purple-600 text-purple-600'
+            : 'border-transparent text-gray-500'
+        "
+      >
+        <i class="bi bi-stars mr-2"></i>
+        AI Summary
+      </button>
+    </div>
+
+    <div class="overflow-y-auto flex-1">
+      <!-- PROFILE -->
+
+      <div *ngIf="activeEmployeeTab === 'profile'" class="p-6">
+        <div class="flex flex-wrap items-center gap-3 mb-6">
+          <span
+            class="px-3 py-1 rounded-full text-xs font-semibold"
+            [ngClass]="{
+              'bg-green-100 text-green-700': selectedEmployee.status === 'Active',
+              'bg-red-100 text-red-700': selectedEmployee.status === 'Inactive',
+            }"
+          >
+            {{ selectedEmployee.status }}
+          </span>
+
+          <span
+            *ngIf="!selectedEmployee.loginEnabled"
+            class="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600"
+          >
+            <i class="bi bi-person-x mr-1"></i>
+            No Login Account
+          </span>
+
+          <span
+            *ngIf="selectedEmployee.loginEnabled && selectedEmployee.accountEnabled"
+            class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700"
+          >
+            <i class="bi bi-shield-check mr-1"></i>
+            Login Active
+          </span>
+
+          <span
+            *ngIf="selectedEmployee.loginEnabled && !selectedEmployee.accountEnabled"
+            class="px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700"
+          >
+            <i class="bi bi-shield-x mr-1"></i>
+            Login Disabled
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="border rounded-xl p-4">
+            <p class="text-xs text-gray-400 uppercase">Email</p>
+
+            <p class="font-semibold mt-1">
+              {{ selectedEmployee.email }}
+            </p>
+          </div>
+
+          <div class="border rounded-xl p-4">
+            <p class="text-xs text-gray-400 uppercase">Phone</p>
+
+            <p class="font-semibold mt-1">
+              {{ selectedEmployee.phone }}
+            </p>
+          </div>
+
+          <div class="border rounded-xl p-4">
+            <p class="text-xs text-gray-400 uppercase">Department</p>
+
+            <p class="font-semibold mt-1">
+              {{ selectedEmployee.department }}
+            </p>
+          </div>
+
+          <div class="border rounded-xl p-4">
+            <p class="text-xs text-gray-400 uppercase">Designation</p>
+
+            <p class="font-semibold mt-1">
+              {{ selectedEmployee.designation }}
+            </p>
+          </div>
+
+          <div class="border rounded-xl p-4">
+            <p class="text-xs text-gray-400 uppercase">Joining Date</p>
+
+            <p class="font-semibold mt-1">
+              {{ selectedEmployee.joiningDate | date: 'dd MMM yyyy' }}
+            </p>
+          </div>
+
+          <div class="border rounded-xl p-4">
+            <p class="text-xs text-gray-400 uppercase">Monthly Salary</p>
+
+            <p class="font-bold text-green-600 text-lg mt-1">
+              ₹{{ selectedEmployee.salary | number: '1.0-0' }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ATTENDANCE -->
+
+      <div *ngIf="activeEmployeeTab === 'attendance'" class="p-6">
+        <div *ngIf="employeeTabLoading" class="py-12 text-center text-gray-500">
+          <i class="bi bi-arrow-repeat animate-spin mr-2"></i>
+          Loading attendance...
+        </div>
+
+        <div
+          *ngIf="!employeeTabLoading && employeeAttendance.length > 0"
+          class="border rounded-xl overflow-x-auto"
+        >
+          <table class="w-full min-w-[700px]">
+            <thead class="bg-slate-800 text-white">
+              <tr>
+                <th class="px-4 py-3 text-left">Date</th>
+
+                <th class="px-4 py-3 text-left">Check In</th>
+
+                <th class="px-4 py-3 text-left">Check Out</th>
+
+                <th class="px-4 py-3 text-left">Hours</th>
+
+                <th class="px-4 py-3 text-left">Status</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let attendance of employeeAttendance" class="border-b">
+                <td class="px-4 py-3">
+                  {{ attendance.attendanceDate | date: 'dd MMM yyyy' }}
+                </td>
+
+                <td class="px-4 py-3">
+                  {{ attendance.checkIn || '--' }}
+                </td>
+
+                <td class="px-4 py-3">
+                  {{ attendance.checkOut || '--' }}
+                </td>
+
+                <td class="px-4 py-3">
+                  {{ attendance.totalHours || 0 | number: '1.2-2' }}
+                </td>
+
+                <td class="px-4 py-3">
+                  <span
+                    class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold"
+                  >
+                    {{ attendance.status }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div
+          *ngIf="!employeeTabLoading && employeeAttendance.length === 0"
+          class="py-14 text-center text-gray-500"
+        >
+          No attendance records found.
+        </div>
+      </div>
+
+      <!-- LEAVES -->
+
+      <div *ngIf="activeEmployeeTab === 'leaves'" class="p-6">
+        <div *ngIf="employeeTabLoading" class="py-12 text-center text-gray-500">
+          Loading leave records...
+        </div>
+
+        <div *ngIf="!employeeTabLoading && employeeLeaves.length > 0" class="space-y-3">
+          <div *ngFor="let leave of employeeLeaves" class="border border-gray-200 rounded-xl p-4">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div>
+                <p class="font-semibold text-slate-800">
+                  {{ leave.leaveType }}
+                </p>
+
+                <p class="text-sm text-gray-500 mt-1">
+                  {{ leave.fromDate | date: 'dd MMM yyyy' }}
+                  -
+                  {{ leave.toDate | date: 'dd MMM yyyy' }}
+                </p>
+
+                <p class="text-sm text-gray-600 mt-2">
+                  {{ leave.reason }}
+                </p>
+              </div>
+
+              <span
+                class="px-3 py-1 rounded-full text-xs font-semibold"
+                [ngClass]="{
+                  'bg-yellow-100 text-yellow-700': leave.status === 'PENDING',
+                  'bg-green-100 text-green-700': leave.status === 'APPROVED',
+                  'bg-red-100 text-red-700': leave.status === 'REJECTED',
+                }"
+              >
+                {{ leave.status }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div
+          *ngIf="!employeeTabLoading && employeeLeaves.length === 0"
+          class="py-14 text-center text-gray-500"
+        >
+          No leave records found.
+        </div>
+      </div>
+
+      <!-- SALARY -->
+
+      <div *ngIf="activeEmployeeTab === 'salary'" class="p-6">
+        <div *ngIf="employeeTabLoading" class="py-12 text-center text-gray-500">
+          Loading salary records...
+        </div>
+
+        <div
+          *ngIf="!employeeTabLoading && employeeSalary.length > 0"
+          class="border rounded-xl overflow-x-auto"
+        >
+          <table class="w-full min-w-[700px]">
+            <thead class="bg-slate-800 text-white">
+              <tr>
+                <th class="px-4 py-3 text-left">Month</th>
+
+                <th class="px-4 py-3 text-right">Basic</th>
+
+                <th class="px-4 py-3 text-right">Gross</th>
+
+                <th class="px-4 py-3 text-right">Net Salary</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let salary of employeeSalary" class="border-b">
+                <td class="px-4 py-3">
+                  {{ salary.salaryMonth }}
+                  /
+                  {{ salary.salaryYear }}
+                </td>
+
+                <td class="px-4 py-3 text-right">₹{{ salary.basicSalary | number: '1.0-0' }}</td>
+
+                <td class="px-4 py-3 text-right text-green-700">
+                  ₹{{ salary.grossSalary | number: '1.0-0' }}
+                </td>
+
+                <td class="px-4 py-3 text-right font-bold">
+                  ₹{{ salary.netSalary | number: '1.0-0' }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div
+          *ngIf="!employeeTabLoading && employeeSalary.length === 0"
+          class="py-14 text-center text-gray-500"
+        >
+          No salary records found.
+        </div>
+      </div>
+
+      <!-- AI PERFORMANCE SUMMARY -->
+
+      <div *ngIf="activeEmployeeTab === 'ai'" class="p-6 space-y-6">
+        <!-- HEADER -->
+
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-3">
+              <div
+                class="w-11 h-11 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center"
+              >
+                <i class="bi bi-stars text-xl"></i>
+              </div>
+
+              <div>
+                <h2 class="text-lg font-bold text-slate-800">AI Performance Summary</h2>
+
+                <p class="text-sm text-gray-500 mt-1">
+                  Generate a factual monthly activity summary from attendance and leave records
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PERIOD SELECTION -->
+
+        <div class="bg-slate-50 border border-gray-200 rounded-xl p-5">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+            <!-- MONTH -->
+
+            <div>
+              <label class="block text-sm font-semibold text-slate-600 mb-2"> Month </label>
+
+              <select
+                [(ngModel)]="selectedAiMonth"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              >
+                <option *ngFor="let month of aiMonths" [ngValue]="month.value">
+                  {{ month.name }}
+                </option>
+              </select>
+            </div>
+
+            <!-- YEAR -->
+
+            <div>
+              <label class="block text-sm font-semibold text-slate-600 mb-2"> Year </label>
+
+              <select
+                [(ngModel)]="selectedAiYear"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              >
+                <option *ngFor="let year of aiYears" [ngValue]="year">
+                  {{ year }}
+                </option>
+              </select>
+            </div>
+
+            <!-- GENERATE -->
+
+            <div>
+              <button
+                type="button"
+                (click)="generateAiPerformanceSummary()"
+                [disabled]="aiSummaryLoading"
+                class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg bg-purple-600 hover:bg-purple-700 disabled:bg-purple-300 text-white font-semibold transition"
+              >
+                <i *ngIf="aiSummaryLoading" class="bi bi-arrow-repeat animate-spin"></i>
+
+                <i *ngIf="!aiSummaryLoading" class="bi bi-stars"></i>
+
+                {{ aiSummaryLoading ? 'Generating...' : 'Generate AI Summary' }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- LOADING -->
+
+        <div
+          *ngIf="aiSummaryLoading"
+          class="bg-white border border-gray-200 rounded-xl py-14 text-center"
+        >
+          <div
+            class="w-14 h-14 mx-auto rounded-full bg-purple-100 text-purple-600 flex items-center justify-center"
+          >
+            <i class="bi bi-stars text-2xl animate-pulse"></i>
+          </div>
+
+          <p class="font-semibold text-slate-700 mt-4">Generating performance summary...</p>
+
+          <p class="text-sm text-gray-500 mt-1">AI is analyzing attendance and leave activity.</p>
+        </div>
+
+        <!-- INITIAL EMPTY STATE -->
+
+        <div
+          *ngIf="!aiSummaryLoading && !aiPerformanceSummary"
+          class="bg-white border border-dashed border-gray-300 rounded-xl py-14 px-5 text-center"
+        >
+          <div
+            class="w-14 h-14 mx-auto rounded-full bg-purple-100 text-purple-600 flex items-center justify-center"
+          >
+            <i class="bi bi-stars text-2xl"></i>
+          </div>
+
+          <p class="font-semibold text-slate-700 mt-4">No summary generated</p>
+
+          <p class="text-sm text-gray-500 mt-1">
+            Select a month and year, then generate the AI summary.
+          </p>
+        </div>
+
+        <!-- RESULT -->
+
+        <ng-container *ngIf="!aiSummaryLoading && aiPerformanceSummary">
+          <!-- EMPLOYEE / PERIOD -->
+
+          <div
+            class="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-100 rounded-xl p-5"
+          >
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <p class="text-xs uppercase tracking-wide text-purple-600 font-semibold">
+                  Monthly AI Summary
+                </p>
+
+                <h3 class="text-xl font-bold text-slate-800 mt-1">
+                  {{ aiPerformanceSummary.employeeName }}
+                </h3>
+
+                <p class="text-sm text-gray-600 mt-1">
+                  {{ aiPerformanceSummary.designation }}
+                  •
+                  {{ aiPerformanceSummary.department }}
+                </p>
+              </div>
+
+              <div
+                class="px-4 py-2 rounded-lg bg-white border border-purple-200 text-purple-700 font-semibold"
+              >
+                {{ aiPerformanceSummary.month | number: '2.0' }}
+                /
+                {{ aiPerformanceSummary.year }}
+              </div>
+            </div>
+          </div>
+
+          <!-- STATS -->
+
+          <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
+            <!-- PRESENT -->
+
+            <div class="border border-gray-200 rounded-xl p-4 bg-white">
+              <div
+                class="w-9 h-9 rounded-lg bg-green-100 text-green-600 flex items-center justify-center"
+              >
+                <i class="bi bi-person-check"></i>
+              </div>
+
+              <p class="text-xs text-gray-500 mt-3">Present</p>
+
+              <h3 class="text-2xl font-bold text-green-600 mt-1">
+                {{ aiPerformanceSummary.presentDays || 0 }}
+              </h3>
+            </div>
+
+            <!-- LATE -->
+
+            <div class="border border-gray-200 rounded-xl p-4 bg-white">
+              <div
+                class="w-9 h-9 rounded-lg bg-yellow-100 text-yellow-600 flex items-center justify-center"
+              >
+                <i class="bi bi-clock-history"></i>
+              </div>
+
+              <p class="text-xs text-gray-500 mt-3">Late</p>
+
+              <h3 class="text-2xl font-bold text-yellow-600 mt-1">
+                {{ aiPerformanceSummary.lateDays || 0 }}
+              </h3>
+            </div>
+
+            <!-- HALF DAYS -->
+
+            <div class="border border-gray-200 rounded-xl p-4 bg-white">
+              <div
+                class="w-9 h-9 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center"
+              >
+                <i class="bi bi-circle-half"></i>
+              </div>
+
+              <p class="text-xs text-gray-500 mt-3">Half Days</p>
+
+              <h3 class="text-2xl font-bold text-orange-600 mt-1">
+                {{ aiPerformanceSummary.halfDays || 0 }}
+              </h3>
+            </div>
+
+            <!-- SHORT HOURS -->
+
+            <div class="border border-gray-200 rounded-xl p-4 bg-white">
+              <div
+                class="w-9 h-9 rounded-lg bg-red-100 text-red-600 flex items-center justify-center"
+              >
+                <i class="bi bi-hourglass-split"></i>
+              </div>
+
+              <p class="text-xs text-gray-500 mt-3">Short Hours</p>
+
+              <h3 class="text-2xl font-bold text-red-600 mt-1">
+                {{ aiPerformanceSummary.shortHoursDays || 0 }}
+              </h3>
+            </div>
+
+            <!-- LEAVE -->
+
+            <div class="border border-gray-200 rounded-xl p-4 bg-white">
+              <div
+                class="w-9 h-9 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center"
+              >
+                <i class="bi bi-calendar-check"></i>
+              </div>
+
+              <p class="text-xs text-gray-500 mt-3">Approved Leave</p>
+
+              <h3 class="text-2xl font-bold text-blue-600 mt-1">
+                {{ aiPerformanceSummary.approvedLeaveDays || 0 }}
+              </h3>
+            </div>
+
+            <!-- RECORDS -->
+
+            <div class="border border-gray-200 rounded-xl p-4 bg-white">
+              <div
+                class="w-9 h-9 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center"
+              >
+                <i class="bi bi-list-check"></i>
+              </div>
+
+              <p class="text-xs text-gray-500 mt-3">Records</p>
+
+              <h3 class="text-2xl font-bold text-indigo-600 mt-1">
+                {{ aiPerformanceSummary.attendanceRecords || 0 }}
+              </h3>
+            </div>
+          </div>
+
+          <!-- WORKING HOURS -->
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-white border border-gray-200 rounded-xl p-5">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm text-gray-500">Total Working Hours</p>
+
+                  <h3 class="text-2xl font-bold text-slate-800 mt-1">
+                    {{ aiPerformanceSummary.totalWorkingHours | number: '1.2-2' }}
+                    hrs
+                  </h3>
+                </div>
+
+                <div
+                  class="w-11 h-11 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center"
+                >
+                  <i class="bi bi-clock"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white border border-gray-200 rounded-xl p-5">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm text-gray-500">Average Recorded Hours</p>
+
+                  <h3 class="text-2xl font-bold text-slate-800 mt-1">
+                    {{ aiPerformanceSummary.averageWorkingHours | number: '1.2-2' }}
+                    hrs
+                  </h3>
+                </div>
+
+                <div
+                  class="w-11 h-11 rounded-full bg-cyan-100 text-cyan-600 flex items-center justify-center"
+                >
+                  <i class="bi bi-bar-chart"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI GENERATED SUMMARY -->
+
+          <div class="relative bg-white border border-purple-200 rounded-xl overflow-hidden">
+            <div
+              class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-5 py-4 bg-purple-50 border-b border-purple-100"
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-9 h-9 rounded-lg bg-purple-600 text-white flex items-center justify-center"
+                >
+                  <i class="bi bi-stars"></i>
+                </div>
+
+                <div>
+                  <h3 class="font-bold text-slate-800">AI Generated Summary</h3>
+
+                  <p class="text-xs text-gray-500 mt-0.5">
+                    Based on recorded attendance and approved leave data
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                (click)="regenerateAiSummary()"
+                [disabled]="aiSummaryLoading"
+                class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-purple-200 bg-white text-purple-700 text-sm font-semibold hover:bg-purple-100 disabled:opacity-50 disabled:cursor-not-allowed transition cursor-pointer"
+              >
+                <i class="bi bi-arrow-clockwise" [class.animate-spin]="aiSummaryLoading"></i>
+
+                {{ aiSummaryLoading ? 'Regenerating...' : 'Regenerate' }}
+              </button>
+            </div>
+
+            <div class="p-5">
+              <p class="text-[15px] text-slate-700 leading-7 whitespace-pre-line">
+                {{ aiPerformanceSummary.summary }}
+              </p>
+            </div>
+
+            <div class="px-5 py-3 bg-gray-50 border-t border-gray-100">
+              <p class="text-xs text-gray-400 flex items-start gap-2">
+                <i class="bi bi-info-circle mt-0.5"></i>
+
+                This summary describes recorded activity only and should not be used as an automated
+                employment decision or employee rating.
+              </p>
+            </div>
+          </div>
+
+          <!-- <div class="relative bg-white border border-purple-200 rounded-xl overflow-hidden">
+            <div
+              class="flex items-center justify-between gap-4 px-5 py-4 bg-purple-50 border-b border-purple-100"
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-9 h-9 rounded-lg bg-purple-600 text-white flex items-center justify-center"
+                >
+                  <i class="bi bi-stars"></i>
+                </div>
+
+                <div>
+                  <h3 class="font-bold text-slate-800">AI Generated Summary</h3>
+
+                  <p class="text-xs text-gray-500 mt-0.5">
+                    Based on recorded attendance and approved leave data
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-5">
+              <p class="text-[15px] text-slate-700 leading-7 whitespace-pre-line">
+                {{ aiPerformanceSummary.summary }}
+              </p>
+            </div>
+
+            <div class="px-5 py-3 bg-gray-50 border-t border-gray-100">
+              <p class="text-xs text-gray-400 flex items-start gap-2">
+                <i class="bi bi-info-circle mt-0.5"></i>
+
+                This summary describes recorded activity only and should not be used as an automated
+                employment decision or employee rating.
+              </p>
+            </div>
+          </div> -->
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- VIEW MODAL FOOTER -->
+
+    <div
+      class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-6 py-4 border-t bg-gray-50 shrink-0"
+    >
+      <div class="flex flex-wrap gap-2">
+        <!-- CREATE LOGIN -->
+
+        <button
+          *ngIf="!selectedEmployee.loginEnabled"
+          type="button"
+          (click)="createLogin(selectedEmployee)"
+          class="inline-flex items-center gap-2 px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition"
+        >
+          <i class="bi bi-person-lock"></i>
+          Create Login
+        </button>
+
+        <!-- RESET PASSWORD -->
+
+        <button
+          *ngIf="selectedEmployee.loginEnabled"
+          type="button"
+          (click)="resetEmployeePassword(selectedEmployee)"
+          class="inline-flex items-center gap-2 px-4 py-2.5 bg-purple-100 text-purple-700 hover:bg-purple-200 rounded-lg font-medium transition"
+        >
+          <i class="bi bi-key-fill"></i>
+          Reset Password
+        </button>
+
+        <!-- DISABLE LOGIN -->
+
+        <button
+          *ngIf="selectedEmployee.loginEnabled && selectedEmployee.accountEnabled"
+          type="button"
+          (click)="disableEmployeeLogin(selectedEmployee)"
+          class="inline-flex items-center gap-2 px-4 py-2.5 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg font-medium transition"
+        >
+          <i class="bi bi-person-slash"></i>
+          Disable Login
+        </button>
+
+        <!-- ENABLE LOGIN -->
+
+        <button
+          *ngIf="selectedEmployee.loginEnabled && !selectedEmployee.accountEnabled"
+          type="button"
+          (click)="enableEmployeeLogin(selectedEmployee)"
+          class="inline-flex items-center gap-2 px-4 py-2.5 bg-green-100 text-green-700 hover:bg-green-200 rounded-lg font-medium transition"
+        >
+          <i class="bi bi-person-check"></i>
+          Enable Login
+        </button>
+
+        <!-- ACCOUNT STATUS -->
+
+        <span
+          *ngIf="selectedEmployee.loginEnabled && selectedEmployee.accountEnabled"
+          class="inline-flex items-center gap-2 px-4 py-2.5 bg-green-100 text-green-700 rounded-lg font-medium"
+        >
+          <i class="bi bi-shield-check"></i>
+          Login Active
+        </span>
+
+        <span
+          *ngIf="selectedEmployee.loginEnabled && !selectedEmployee.accountEnabled"
+          class="inline-flex items-center gap-2 px-4 py-2.5 bg-red-100 text-red-700 rounded-lg font-medium"
+        >
+          <i class="bi bi-shield-x"></i>
+          Login Disabled
+        </span>
+      </div>
+
+      <div class="flex gap-3">
+        <button
+          type="button"
+          (click)="closeViewModal()"
+          class="px-5 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-100 transition"
+        >
+          Close
+        </button>
+
+        <button
+          type="button"
+          (click)="closeViewModal(); editEmployee(selectedEmployee)"
+          class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition"
+        >
+          <i class="bi bi-pencil-square"></i>
+          Edit Employee
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

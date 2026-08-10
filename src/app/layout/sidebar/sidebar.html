@@ -1,0 +1,72 @@
+<aside
+  class="h-full bg-slate-900 text-white flex flex-col transition-all duration-300"
+  [ngClass]="isCollapsed ? 'w-[72px]' : 'w-[240px]'"
+>
+  <!-- HEADER -->
+
+  <div
+    class="h-16 flex items-center border-b border-slate-700"
+    [ngClass]="isCollapsed ? 'justify-center px-2' : 'justify-between px-4'"
+  >
+    <div *ngIf="!isCollapsed" class="flex items-center gap-2">
+      <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center">
+        <i class="bi bi-people-fill"></i>
+      </div>
+
+      <div>
+        <p class="font-bold text-sm">EMS</p>
+
+        <p class="text-[10px] text-slate-400">Management</p>
+      </div>
+    </div>
+
+    <!-- COLLAPSE BUTTON -->
+
+    <button
+      type="button"
+      (click)="toggleSidebar()"
+      class="w-9 h-9 flex items-center justify-center rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition"
+      [title]="isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'"
+    >
+      <i class="bi text-lg" [ngClass]="isCollapsed ? 'bi-chevron-right' : 'bi-chevron-left'"></i>
+    </button>
+  </div>
+
+  <!-- MENU -->
+
+  <nav class="flex-1 py-4 space-y-1 overflow-y-auto" [ngClass]="isCollapsed ? 'px-2' : 'px-3'">
+    <a
+      *ngFor="let menu of menus"
+      [routerLink]="menu.route"
+      routerLinkActive="bg-blue-600 text-white"
+      [routerLinkActiveOptions]="{
+        exact: menu.route === '/dashboard',
+      }"
+      class="flex items-center h-11 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition cursor-pointer"
+      [ngClass]="isCollapsed ? 'justify-center px-0' : 'gap-3 px-3'"
+      [title]="isCollapsed ? menu.title : ''"
+    >
+      <i [class]="menu.icon" class="text-lg shrink-0"></i>
+
+      <span *ngIf="!isCollapsed" class="text-sm font-medium whitespace-nowrap">
+        {{ menu.title }}
+      </span>
+    </a>
+  </nav>
+
+  <!-- LOGOUT -->
+
+  <div class="border-t border-slate-700 py-3" [ngClass]="isCollapsed ? 'px-2' : 'px-3'">
+    <button
+      type="button"
+      (click)="logout()"
+      class="w-full h-11 flex items-center rounded-lg text-red-400 hover:bg-red-500/10 hover:text-red-300 transition"
+      [ngClass]="isCollapsed ? 'justify-center px-0' : 'gap-3 px-3'"
+      [title]="isCollapsed ? 'Logout' : ''"
+    >
+      <i class="bi bi-box-arrow-right text-lg"></i>
+
+      <span *ngIf="!isCollapsed" class="text-sm font-medium"> Logout </span>
+    </button>
+  </div>
+</aside>

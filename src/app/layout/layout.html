@@ -1,0 +1,40 @@
+<!-- 
+<div class="flex h-screen bg-slate-100">
+
+  <app-sidebar></app-sidebar>
+
+  <div class="flex flex-col flex-1 min-w-0 overflow-hidden">
+
+    <app-navbar></app-navbar>
+
+    <main class="flex-1 overflow-y-auto p-6">
+      <router-outlet></router-outlet>
+    </main>
+
+  </div>
+
+</div> -->
+
+<div class="flex h-screen overflow-hidden bg-gray-50">
+  <!-- SIDEBAR -->
+
+  <app-sidebar (sidebarToggle)="onSidebarToggle($event)"></app-sidebar>
+
+  <!-- MAIN CONTENT -->
+
+  <div class="flex flex-col flex-1 min-w-0 overflow-hidden transition-all duration-300">
+    <!-- NAVBAR -->
+
+    <app-navbar></app-navbar>
+
+    <!-- PAGE CONTENT -->
+
+    <main class="flex-1 overflow-y-auto p-6">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+
+  <!-- GLOBAL AI CHAT -->
+
+  <app-ai-chat></app-ai-chat>
+</div>

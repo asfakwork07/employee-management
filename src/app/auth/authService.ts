@@ -27,4 +27,9 @@ export class AuthService {
   isLoggedIn() {
     return !!this.getToken();
   }
+  changePassword(data: { currentPassword: string; newPassword: string }) {
+    return this.http.post(`${API_URL}/auth/change-password`, data, {
+      responseType: 'text',
+    });
+  }
 }
