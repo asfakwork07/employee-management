@@ -13,6 +13,8 @@ import { HolidayService } from '../../holidays/holiday.service';
 import { EmployeeService } from '../../services/employee';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { AdminDailyBrief } from '../../admin-daily-brief.model';
+import { AiChatService } from '../../ai-chat/ai-chat.service';
 
 Chart.register(...registerables);
 
@@ -213,6 +215,7 @@ export class Dashboard implements OnInit {
     private router: Router,
     private aiPerformanceService: EmployeeService,
     private holidayService: HolidayService,
+    private aiService: AiChatService,
   ) {}
 
   ngOnInit(): void {
@@ -220,6 +223,10 @@ export class Dashboard implements OnInit {
 
     this.loadRecentNotifications();
     this.loadUpcomingHoliday();
+
+    if (localStorage.getItem('role') === 'ADMIN') {
+      this.loadAdminDailyBrief();
+    }
   }
 
   loadDashboard(): void {
@@ -528,6 +535,39 @@ export class Dashboard implements OnInit {
           this.cdr.detectChanges();
         },
       });
+  }
+
+  adminDailyBrief: AdminDailyBrief | null = null;
+
+  aiBriefLoading = false;
+
+  aiBriefError = '';
+
+  loadAdminDailyBrief(): void {
+    if (localStorage.getItem('role') !== 'ADMIN') {
+      return;
+    }
+
+    this.aiBriefLoading = true;
+    this.aiBriefError = '';
+
+    this.aiService.getAdminDailyBrief().subscribe({
+      next: (response) => {
+        this.adminDailyBrief = response;
+
+        this.aiBriefLoading = false;
+        this.cdr.detectChanges();
+      },
+
+      error: (error) => {
+        console.error('Unable to load AI daily brief', error);
+
+        this.aiBriefLoading = false;
+
+        this.aiBriefError = 'Unable to generate AI daily brief.';
+          this.cdr.detectChanges();
+      },
+    });
   }
 
   navigateTo(path: string): void {

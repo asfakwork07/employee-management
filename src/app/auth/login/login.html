@@ -1,174 +1,227 @@
 <div
-  class="h-screen overflow-hidden bg-gradient-to-br from-blue-700 via-indigo-700 to-purple-700 flex items-center justify-center p-4">
+  class="h-screen w-screen overflow-hidden bg-gradient-to-br from-blue-50 via-white to-indigo-50"
+>
+  <div class="h-full w-full grid lg:grid-cols-2">
+    <!-- =====================================================
+         LEFT SIDE
+    ====================================================== -->
 
-  <div class="w-full max-w-5xl h-[98vh] bg-white rounded-3xl shadow-2xl overflow-hidden grid md:grid-cols-2">
-
-    <!-- Left Side -->
     <div
-      class="hidden md:flex flex-col justify-center items-center bg-gradient-to-br from-blue-600 to-indigo-700 text-white p-8">
+      class="hidden lg:flex relative overflow-hidden bg-gradient-to-br from-blue-700 via-indigo-700 to-purple-700 text-white px-10 xl:px-16 py-8 flex-col justify-between"
+    >
+      <!-- Background decoration -->
 
-      <div class="w-28 h-28 rounded-full bg-white/20 flex items-center justify-center mb-2">
+      <div class="absolute -top-24 -right-24 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
 
-        <span class="text-5xl">
-          👨‍💼
-        </span>
+      <div
+        class="absolute -bottom-24 -left-24 w-96 h-96 bg-purple-300/10 rounded-full blur-3xl"
+      ></div>
 
-      </div>
+      <!-- Top -->
 
-      <h1 class="text-4xl font-bold text-center">
+      <div class="relative z-10">
+        <!-- Brand -->
 
-        Employee Management
+        <div
+          class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/10 border border-white/10 backdrop-blur-sm"
+        >
+          <div class="w-9 h-9 rounded-lg bg-white text-blue-700 flex items-center justify-center">
+            <i class="bi bi-buildings text-lg"></i>
+          </div>
 
-      </h1>
+          <span class="font-semibold text-sm"> Employee Management System </span>
+        </div>
 
-      <p class="mt-2 text-blue-100 text-center leading-7">
+        <!-- Main heading -->
 
-        Manage Employees Easily <br>
-        Add, Edit, Delete & Track Employee Information.
-
-      </p>
-
-      <div class="mt-10 grid grid-cols-2 gap-4 w-full">
-
-        <div class="bg-white/10 rounded-xl p-4 text-center backdrop-blur-sm">
-
-          <h3 class="text-3xl font-bold">
-            100%
-          </h3>
-
-          <p class="text-sm text-blue-100">
-            Secure
+        <div class="mt-12 xl:mt-16 max-w-xl">
+          <p class="text-xs uppercase tracking-[0.25em] text-blue-200 font-semibold">
+            Modern Workforce Platform
           </p>
 
-        </div>
+          <h1 class="mt-4 text-4xl xl:text-5xl font-bold leading-tight">
+            Manage your team
 
-        <div class="bg-white/10 rounded-xl p-4 text-center backdrop-blur-sm">
+            <span class="text-blue-200"> smarter. </span>
+          </h1>
 
-          <h3 class="text-3xl font-bold">
-            24/7
-          </h3>
-
-          <p class="text-sm text-blue-100">
-            Available
+          <p class="mt-5 text-base xl:text-lg text-blue-100 leading-7">
+            Manage employees, attendance, leaves, payroll, notifications and AI-powered workforce
+            insights from one secure platform.
           </p>
-
         </div>
 
-      </div>
+        <!-- Feature cards -->
 
-    </div>
+        <div class="mt-8 grid grid-cols-2 gap-4 max-w-xl">
+          <!-- Secure -->
 
-    <!-- Right Side -->
-    <div class="flex flex-col justify-center p-8 md:p-10">
+          <div class="bg-white/10 border border-white/10 rounded-2xl p-4 backdrop-blur-sm">
+            <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+              <i class="bi bi-shield-check text-xl"></i>
+            </div>
 
-      <div class="text-center">
+            <p class="mt-3 font-semibold">Secure Access</p>
 
-        <div class="mx-auto w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center">
+            <p class="text-xs text-blue-100 mt-1">JWT & role-based authentication</p>
+          </div>
 
-          <span class="text-3xl">
-            🔐
-          </span>
+          <!-- AI -->
 
+          <div class="bg-white/10 border border-white/10 rounded-2xl p-4 backdrop-blur-sm">
+            <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+              <i class="bi bi-stars text-xl"></i>
+            </div>
+
+            <p class="mt-3 font-semibold">AI Powered</p>
+
+            <p class="text-xs text-blue-100 mt-1">Smart summaries & AI assistant</p>
+          </div>
         </div>
-
-        <h2 class="mt-5 text-3xl font-bold text-gray-800">
-
-          Welcome Back
-
-        </h2>
-
-        <p class="mt-2 text-gray-500">
-
-          Sign in to continue
-
-        </p>
-
       </div>
 
-      <!-- Email -->
-      <div class="mt-6">
+      <!-- Left footer -->
 
-        <label class="block text-sm font-semibold text-gray-700 mb-2">
+      <div class="relative z-10 flex items-center justify-between text-xs text-blue-200">
+        <span> © 2026 Employee Management System </span>
 
-          Email Address
+        <span class="inline-flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-green-300"></span>
 
-        </label>
-
-        <input type="email" [(ngModel)]="email" placeholder="Enter your email" class="w-full rounded-xl border border-gray-300 px-4 py-2.5
-                 focus:outline-none focus:ring-2 focus:ring-blue-500
-                 focus:border-blue-500 transition" />
-
-      </div>
-
-      <!-- Password -->
-      <div class="mt-5">
-
-        <label class="block text-sm font-semibold text-gray-700 mb-2">
-
-          Password
-
-        </label>
-
-        <input type="password" [(ngModel)]="password" placeholder="Enter your password" class="w-full rounded-xl border border-gray-300 px-4 py-2.5
-                 focus:outline-none focus:ring-2 focus:ring-blue-500
-                 focus:border-blue-500 transition" />
-
-      </div>
-
-      <!-- Remember Me -->
-      <div class="flex justify-between items-center mt-5">
-
-        <label class="flex items-center gap-2 text-sm text-gray-600">
-
-          <input type="checkbox" class="rounded text-blue-600">
-
-          Remember Me
-
-        </label>
-
-        <a href="#" class="text-blue-600 text-sm hover:underline">
-
-          Forgot Password?
-
-        </a>
-
-      </div>
-
-      <!-- Login Button -->
-      <button (click)="login()" class="mt-1 w-full bg-gradient-to-r from-blue-600 to-indigo-700
-               hover:from-blue-700 hover:to-indigo-800
-               text-white font-semibold py-3 rounded-xl
-               shadow-lg hover:shadow-xl transition-all duration-300
-               hover:scale-[1.02]">
-
-        Login
-
-      </button>
-
-      <!-- Divider -->
-      <div class="flex items-center my-6">
-
-        <div class="flex-1 border-t"></div>
-
-        <span class="px-4 text-gray-400 text-sm">
-
-          Employee Portal
-
+          Secure Portal
         </span>
-
-        <div class="flex-1 border-t"></div>
-
       </div>
-
-      <!-- Footer -->
-      <p class="text-center text-gray-500 text-sm">
-
-        © 2026 Employee Management System
-
-      </p>
-
     </div>
 
+    <!-- =====================================================
+         RIGHT SIDE
+    ====================================================== -->
+
+    <div class="h-full flex items-center justify-center bg-white px-6 sm:px-10 lg:px-12">
+      <div class="w-full max-w-md">
+        <!-- Mobile Logo -->
+
+        <div class="lg:hidden flex items-center gap-3 mb-6">
+          <div class="w-11 h-11 rounded-xl bg-blue-600 text-white flex items-center justify-center">
+            <i class="bi bi-buildings text-xl"></i>
+          </div>
+
+          <div>
+            <h2 class="font-bold text-slate-800">Employee Management</h2>
+
+            <p class="text-xs text-gray-500">Secure employee portal</p>
+          </div>
+        </div>
+
+        <!-- Header -->
+
+        <div>
+          <div
+            class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center"
+          >
+            <i class="bi bi-box-arrow-in-right text-xl"></i>
+          </div>
+
+          <h2 class="mt-4 text-3xl font-bold text-slate-900">Welcome back</h2>
+
+          <p class="mt-1 text-sm text-gray-500">
+            Sign in to access your employee management portal.
+          </p>
+        </div>
+
+        <!-- Form -->
+
+        <div class="mt-6 space-y-4">
+          <!-- Email -->
+
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5"> Email address </label>
+
+            <div class="relative">
+              <i class="bi bi-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+
+              <input
+                type="email"
+                [(ngModel)]="email"
+                placeholder="name@company.com"
+                autocomplete="email"
+                class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-300 bg-white text-slate-800 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+              />
+            </div>
+          </div>
+
+          <!-- Password -->
+
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="text-sm font-semibold text-slate-700"> Password </label>
+
+              <a
+                routerLink="/forgot-password"
+                class="text-sm font-semibold text-blue-600 hover:text-blue-700 hover:underline cursor-pointer"
+              >
+                Forgot password?
+              </a>
+            </div>
+
+            <div class="relative">
+              <i class="bi bi-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+
+              <input
+                type="password"
+                [(ngModel)]="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-300 bg-white text-slate-800 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+              />
+            </div>
+          </div>
+
+          <!-- Remember -->
+
+          <label class="inline-flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
+            <input
+              type="checkbox"
+              [(ngModel)]="rememberMe"
+              class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+
+            Remember me
+          </label>
+
+          <!-- Login -->
+
+          <button
+            type="button"
+            (click)="login()"
+            class="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold shadow-lg shadow-blue-500/20 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
+          >
+            <i class="bi bi-box-arrow-in-right"></i>
+
+            Sign In
+          </button>
+        </div>
+
+        <!-- Security -->
+
+        <div class="mt-6 p-3.5 bg-slate-50 border border-slate-200 rounded-xl">
+          <div class="flex items-start gap-3">
+            <i class="bi bi-shield-check text-green-600 mt-0.5"></i>
+
+            <div>
+              <p class="text-sm font-semibold text-slate-700">Secure login</p>
+
+              <p class="text-xs text-gray-500 mt-0.5">
+                Protected with secure authentication and role-based access control.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+
+        <p class="mt-5 text-center text-xs text-gray-400">© 2026 Employee Management System</p>
+      </div>
+    </div>
   </div>
-
 </div>

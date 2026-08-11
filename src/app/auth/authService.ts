@@ -32,4 +32,23 @@ export class AuthService {
       responseType: 'text',
     });
   }
+
+  forgotPassword(email: string) {
+    return this.http.post(`${this.apiUrl}/forgot-password`, { email });
+  }
+
+  verifyOtp(email: string, otp: string) {
+    return this.http.post(`${this.apiUrl}/verify-otp`, {
+      email,
+      otp,
+    });
+  }
+
+  resetPassword(email: string, otp: string, newPassword: string) {
+    return this.http.post(`${this.apiUrl}/reset-password`, {
+      email,
+      otp,
+      newPassword,
+    });
+  }
 }

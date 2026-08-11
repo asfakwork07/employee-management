@@ -13,7 +13,7 @@
         <button
           type="button"
           (click)="toggleNotifications()"
-          class="relative w-10 h-10 flex items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 transition"
+          class="relative w-10 h-10 cursor-pointer flex items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 transition"
           title="Notifications"
         >
           <i class="bi bi-bell text-xl"></i>
@@ -50,7 +50,7 @@
                 *ngIf="unreadCount > 0"
                 type="button"
                 (click)="markAllNotificationsRead()"
-                class="text-xs font-semibold text-blue-600 hover:text-blue-700 transition"
+                class="text-xs cursor-pointer font-semibold text-blue-400 hover:text-blue-700 transition"
               >
                 Mark all read
               </button>
@@ -59,7 +59,7 @@
                 *ngIf="notifications.length > 0"
                 type="button"
                 (click)="clearAllNotifications()"
-                class="text-xs font-semibold text-red-600 hover:text-red-700 transition"
+                class="text-xs cursor-pointer font-semibold text-red-400 hover:text-red-700 transition"
               >
                 Clear All
               </button>
@@ -67,7 +67,7 @@
               <button
                 type="button"
                 (click)="closeNotifications()"
-                class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100"
+                class="w-8 h-8 flex cursor-pointer items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100"
               >
                 <i class="bi bi-x-lg"></i>
               </button>
@@ -101,7 +101,7 @@
           >
             <div
               *ngFor="let notification of notifications"
-              class="relative border-b border-gray-100 hover:bg-slate-50 transition"
+              class="relative border-b  border-gray-100 hover:bg-slate-50 transition"
               [ngClass]="{
                 'bg-blue-50/70': !notification.read,
                 'bg-white': notification.read,
@@ -110,7 +110,7 @@
               <button
                 type="button"
                 (click)="openNotification(notification)"
-                class="w-full text-left px-4 py-4 pr-12"
+                class="w-full cursor-pointer text-left px-4 py-4 pr-12"
               >
                 <div class="flex items-start gap-3">
                   <div
@@ -155,7 +155,14 @@
           </div>
         </div>
       </div>
-
+      <button
+        type="button"
+        (click)="openPasswordModal()"
+        class="w-10 cursor-pointer h-10 flex items-center justify-center rounded-lg text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition"
+        title="Change Password"
+      >
+        <i class="bi bi-key text-lg"></i>
+      </button>
       <div class="hidden md:flex items-center gap-3 px-3 py-2">
         <div
           class="w-9 h-9 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold"
@@ -174,23 +181,23 @@
         </div>
       </div>
 
-      <button
+      <!-- <button
         type="button"
         (click)="openPasswordModal()"
         class="w-10 h-10 flex items-center justify-center rounded-lg text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition"
         title="Change Password"
       >
         <i class="bi bi-key text-lg"></i>
-      </button>
+      </button> -->
 
-      <button
+      <!-- <button
         type="button"
         (click)="logout()"
         class="w-10 h-10 flex items-center justify-center rounded-lg text-red-600 hover:bg-red-50 transition"
         title="Logout"
       >
         <i class="bi bi-box-arrow-right text-lg"></i>
-      </button>
+      </button> -->
     </div>
   </div>
 </nav>
