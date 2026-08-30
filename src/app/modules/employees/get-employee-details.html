@@ -12,7 +12,7 @@
       <button
         type="button"
         (click)="showImportModals()"
-        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-gray-300 bg-white text-slate-700 font-medium hover:bg-gray-50 transition"
+        class="inline-flex cursor-pointer items-center gap-2 px-4 py-2.5 rounded-lg border border-gray-300 bg-white text-slate-700 font-medium hover:bg-gray-50 transition"
       >
         <i class="bi bi-file-earmark-excel text-green-600"></i>
         Import Excel
@@ -21,7 +21,7 @@
       <button
         type="button"
         (click)="openAddModal()"
-        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-sm transition"
+        class="inline-flex cursor-pointer items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-sm transition"
       >
         <i class="bi bi-person-plus"></i>
         Add Employee
@@ -183,7 +183,7 @@
             type="button"
             (click)="resetFilters()"
             title="Reset Filters"
-            class="w-12 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100"
+            class="w-12 rounded-lg cursor-pointer border border-gray-300 text-gray-600 hover:bg-gray-100"
           >
             <i class="bi bi-arrow-counterclockwise"></i>
           </button>
@@ -197,7 +197,7 @@
       class="px-5 py-4 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
     >
       <div>
-        <h2 class="text-lg font-semibold text-slate-800">Employee Directory</h2>
+        <!-- <h2 class="text-lg font-semibold text-slate-800">Employee Directory</h2> -->
 
         <p class="text-sm text-gray-500 mt-1">View and manage employee information</p>
       </div>
@@ -217,47 +217,70 @@
       Loading employees...
     </div>
 
-    <div *ngIf="!loading" class="overflow-x-auto">
-      <table class="w-full min-w-[1250px]">
-        <thead class="bg-slate-800 text-white">
+    <div
+      *ngIf="!loading"
+      class="relative w-full overflow-auto max-h-[calc(100vh-310px)] min-h-[300px] rounded-b-xl"
+    >
+      <table class="w-full min-w-[1250px] border-collapse">
+        <thead class="sticky top-0 z-20 bg-slate-800 text-white shadow-sm">
           <tr>
-            <th class="px-5 py-4 text-left text-sm font-semibold">Employee</th>
+            <th class="px-5 py-4 text-left text-sm font-semibold whitespace-nowrap bg-slate-800">
+              Employee
+            </th>
 
             <th
               (click)="sort('department')"
-              class="px-5 py-4 text-left text-sm font-semibold cursor-pointer"
+              class="px-5 py-4 text-left text-sm font-semibold whitespace-nowrap cursor-pointer bg-slate-800 hover:bg-slate-700 transition"
             >
-              Department
+              <div class="flex items-center gap-2">
+                Department
+                <i class="bi bi-arrow-down-up text-xs text-slate-400"></i>
+              </div>
             </th>
 
-            <th class="px-5 py-4 text-left text-sm font-semibold">Designation</th>
+            <th class="px-5 py-4 text-left text-sm font-semibold whitespace-nowrap bg-slate-800">
+              Designation
+            </th>
 
-            <th class="px-5 py-4 text-left text-sm font-semibold">Phone</th>
+            <th class="px-5 py-4 text-left text-sm font-semibold whitespace-nowrap bg-slate-800">
+              Phone
+            </th>
 
             <th
               (click)="sort('salary')"
-              class="px-5 py-4 text-right text-sm font-semibold cursor-pointer"
+              class="px-5 py-4 text-right text-sm font-semibold whitespace-nowrap cursor-pointer bg-slate-800 hover:bg-slate-700 transition"
             >
-              Salary
+              <div class="flex items-center justify-end gap-2">
+                Salary
+                <i class="bi bi-arrow-down-up text-xs text-slate-400"></i>
+              </div>
             </th>
 
-            <th class="px-5 py-4 text-left text-sm font-semibold">Joining Date</th>
+            <th class="px-5 py-4 text-left text-sm font-semibold whitespace-nowrap bg-slate-800">
+              Joining Date
+            </th>
 
-            <th class="px-5 py-4 text-center text-sm font-semibold">Status</th>
+            <th class="px-5 py-4 text-center text-sm font-semibold whitespace-nowrap bg-slate-800">
+              Status
+            </th>
 
-            <th class="px-5 py-4 text-center text-sm font-semibold">Login</th>
+            <th class="px-5 py-4 text-center text-sm font-semibold whitespace-nowrap bg-slate-800">
+              Login
+            </th>
 
-            <th class="px-5 py-4 text-center text-sm font-semibold">Actions</th>
+            <th class="px-5 py-4 text-center text-sm font-semibold whitespace-nowrap bg-slate-800">
+              Actions
+            </th>
           </tr>
         </thead>
 
-        <tbody>
+        <tbody class="bg-white">
           <tr
             *ngFor="let employee of paginatedEmployees"
             class="border-b border-gray-100 hover:bg-slate-50 transition"
           >
             <td class="px-5 py-4">
-              <div class="flex items-center gap-3">
+              <div class="flex items-center gap-3 min-w-[230px]">
                 <div
                   class="w-11 h-11 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold shrink-0"
                 >
@@ -265,17 +288,20 @@
                   {{ employee.lastName?.charAt(0) }}
                 </div>
 
-                <div>
+                <div class="min-w-0">
                   <button
                     type="button"
                     (click)="viewEmployee(employee)"
-                    class="font-semibold text-slate-800 hover:text-blue-600"
+                    class="font-semibold text-slate-800 hover:text-blue-600 cursor-pointer whitespace-nowrap"
                   >
                     {{ employee.firstName }}
                     {{ employee.lastName }}
                   </button>
 
-                  <p class="text-sm text-gray-500 mt-0.5">
+                  <p
+                    class="text-sm text-gray-500 mt-0.5 max-w-[210px] truncate"
+                    [title]="employee.email"
+                  >
                     {{ employee.email }}
                   </p>
 
@@ -284,33 +310,34 @@
               </div>
             </td>
 
-            <td class="px-5 py-4">
+            <td class="px-5 py-4 whitespace-nowrap">
               <span class="inline-flex px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-sm">
                 {{ employee.department }}
               </span>
             </td>
 
-            <td class="px-5 py-4 text-slate-600">
+            <td class="px-5 py-4 text-slate-600 whitespace-nowrap">
               {{ employee.designation }}
             </td>
 
-            <td class="px-5 py-4 text-slate-600">
+            <td class="px-5 py-4 text-slate-600 whitespace-nowrap">
               {{ employee.phone }}
             </td>
 
-            <td class="px-5 py-4 text-right font-semibold text-green-700">
+            <td class="px-5 py-4 text-right font-semibold text-green-700 whitespace-nowrap">
               ₹{{ employee.salary | number: '1.0-0' }}
             </td>
 
-            <td class="px-5 py-4 text-slate-600">
+            <td class="px-5 py-4 text-slate-600 whitespace-nowrap">
               {{ employee.joiningDate | date: 'dd MMM yyyy' }}
             </td>
 
-            <td class="px-5 py-4 text-center">
+            <td class="px-5 py-4 text-center whitespace-nowrap">
               <span
                 class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold"
                 [ngClass]="{
                   'bg-green-100 text-green-700': employee.status === 'Active',
+
                   'bg-red-100 text-red-700': employee.status === 'Inactive',
                 }"
               >
@@ -318,7 +345,7 @@
               </span>
             </td>
 
-            <td class="px-5 py-4 text-center">
+            <td class="px-5 py-4 text-center whitespace-nowrap">
               <span
                 *ngIf="!employee.loginEnabled"
                 class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-xs font-semibold"
@@ -344,13 +371,13 @@
               </span>
             </td>
 
-            <td class="px-5 py-4">
+            <td class="px-5 py-4 whitespace-nowrap">
               <div class="flex items-center justify-center gap-2">
                 <button
                   type="button"
                   (click)="viewEmployee(employee)"
                   title="View Employee"
-                  class="w-9 h-9 flex items-center justify-center rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 transition"
+                  class="w-9 h-9 cursor-pointer flex items-center justify-center rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 transition"
                 >
                   <i class="bi bi-eye"></i>
                 </button>
@@ -359,7 +386,7 @@
                   type="button"
                   (click)="editEmployee(employee)"
                   title="Edit Employee"
-                  class="w-9 h-9 flex items-center justify-center rounded-lg bg-yellow-100 text-yellow-700 hover:bg-yellow-200 transition"
+                  class="w-9 h-9 cursor-pointer flex items-center justify-center rounded-lg bg-yellow-100 text-yellow-700 hover:bg-yellow-200 transition"
                 >
                   <i class="bi bi-pencil-square"></i>
                 </button>
@@ -369,7 +396,7 @@
                   type="button"
                   (click)="createLogin(employee)"
                   title="Create Login Account"
-                  class="w-9 h-9 flex items-center justify-center rounded-lg bg-purple-100 text-purple-700 hover:bg-purple-200 transition"
+                  class="w-9 h-9 cursor-pointer flex items-center justify-center rounded-lg bg-purple-100 text-purple-700 hover:bg-purple-200 transition"
                 >
                   <i class="bi bi-person-lock"></i>
                 </button>
@@ -379,7 +406,7 @@
                   type="button"
                   (click)="resetEmployeePassword(employee)"
                   title="Reset Employee Password"
-                  class="w-9 h-9 flex items-center justify-center rounded-lg bg-purple-100 text-purple-700 hover:bg-purple-200 transition"
+                  class="w-9 h-9 cursor-pointer flex items-center justify-center rounded-lg bg-purple-100 text-purple-700 hover:bg-purple-200 transition"
                 >
                   <i class="bi bi-key-fill"></i>
                 </button>
@@ -389,7 +416,7 @@
                   type="button"
                   (click)="disableEmployeeLogin(employee)"
                   title="Disable Login"
-                  class="w-9 h-9 flex items-center justify-center rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition"
+                  class="w-9 h-9 cursor-pointer flex items-center justify-center rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition"
                 >
                   <i class="bi bi-person-slash"></i>
                 </button>
@@ -399,7 +426,7 @@
                   type="button"
                   (click)="enableEmployeeLogin(employee)"
                   title="Enable Login"
-                  class="w-9 h-9 flex items-center justify-center rounded-lg bg-green-100 text-green-700 hover:bg-green-200 transition"
+                  class="w-9 h-9 cursor-pointer flex items-center justify-center rounded-lg bg-green-100 text-green-700 hover:bg-green-200 transition"
                 >
                   <i class="bi bi-person-check"></i>
                 </button>
@@ -408,7 +435,7 @@
                   type="button"
                   (click)="deleteEmployee(employee.id)"
                   title="Delete Employee"
-                  class="w-9 h-9 flex items-center justify-center rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition"
+                  class="w-9 h-9 cursor-pointer flex items-center justify-center rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition"
                 >
                   <i class="bi bi-trash"></i>
                 </button>
@@ -1126,7 +1153,7 @@
                 type="button"
                 (click)="generateAiPerformanceSummary()"
                 [disabled]="aiSummaryLoading"
-                class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg bg-purple-600 hover:bg-purple-700 disabled:bg-purple-300 text-white font-semibold transition"
+                class="w-full cursor-pointer inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg bg-purple-600 hover:bg-purple-700 disabled:bg-purple-300 text-white font-semibold transition"
               >
                 <i *ngIf="aiSummaryLoading" class="bi bi-arrow-repeat animate-spin"></i>
 
@@ -1453,7 +1480,7 @@
           *ngIf="!selectedEmployee.loginEnabled"
           type="button"
           (click)="createLogin(selectedEmployee)"
-          class="inline-flex items-center gap-2 px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition"
+          class="inline-flex cursor-pointer items-center gap-2 px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition"
         >
           <i class="bi bi-person-lock"></i>
           Create Login
@@ -1465,7 +1492,7 @@
           *ngIf="selectedEmployee.loginEnabled"
           type="button"
           (click)="resetEmployeePassword(selectedEmployee)"
-          class="inline-flex items-center gap-2 px-4 py-2.5 bg-purple-100 text-purple-700 hover:bg-purple-200 rounded-lg font-medium transition"
+          class="inline-flex cursor-pointer items-center gap-2 px-4 py-2.5 bg-purple-100 text-purple-700 hover:bg-purple-200 rounded-lg font-medium transition"
         >
           <i class="bi bi-key-fill"></i>
           Reset Password
@@ -1477,7 +1504,7 @@
           *ngIf="selectedEmployee.loginEnabled && selectedEmployee.accountEnabled"
           type="button"
           (click)="disableEmployeeLogin(selectedEmployee)"
-          class="inline-flex items-center gap-2 px-4 py-2.5 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg font-medium transition"
+          class="inline-flex cursor-pointer items-center gap-2 px-4 py-2.5 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg font-medium transition"
         >
           <i class="bi bi-person-slash"></i>
           Disable Login
@@ -1489,7 +1516,7 @@
           *ngIf="selectedEmployee.loginEnabled && !selectedEmployee.accountEnabled"
           type="button"
           (click)="enableEmployeeLogin(selectedEmployee)"
-          class="inline-flex items-center gap-2 px-4 py-2.5 bg-green-100 text-green-700 hover:bg-green-200 rounded-lg font-medium transition"
+          class="inline-flex cursor-pointer items-center gap-2 px-4 py-2.5 bg-green-100 text-green-700 hover:bg-green-200 rounded-lg font-medium transition"
         >
           <i class="bi bi-person-check"></i>
           Enable Login
@@ -1518,18 +1545,18 @@
         <button
           type="button"
           (click)="closeViewModal()"
-          class="px-5 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-100 transition"
+          class="px-5 py-2.5 border cursor-pointer border-gray-300 rounded-lg hover:bg-gray-100 transition"
         >
           Close
         </button>
 
         <button
           type="button"
-          (click)="closeViewModal(); editEmployee(selectedEmployee)"
-          class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition"
+          (click)="closeViewModal()"
+          class="inline-flex items-center cursor-pointer gap-2 px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition"
         >
           <i class="bi bi-pencil-square"></i>
-          Edit Employee
+          Close
         </button>
       </div>
     </div>

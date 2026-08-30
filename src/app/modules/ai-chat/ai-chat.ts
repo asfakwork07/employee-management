@@ -1,244 +1,21 @@
-// import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
-
-// import { CommonModule } from '@angular/common';
-// import { FormsModule } from '@angular/forms';
-
-// import { marked } from 'marked';
-
-// import { AiChatService } from './ai-chat.service';
-
-// @Component({
-//   selector: 'app-ai-chat',
-//   standalone: true,
-//   imports: [CommonModule, FormsModule],
-//   templateUrl: './ai-chat.html',
-//   styleUrl: './ai-chat.css',
-// })
-// export class AiChat {
-//   @ViewChild('chatBody')
-//   chatBody!: ElementRef;
-
-//   isOpen = false;
-
-//   loading = false;
-
-//   message = '';
-
-//   role = localStorage.getItem('role') || '';
-
-//   messages: any[] = [
-//     {
-//       sender: 'AI',
-//       text: 'Hi! I can help you with attendance, leave, salary, holidays and other EMS information.',
-//       timestamp: new Date(),
-//     },
-//   ];
-
-//   constructor(
-//     private aiChatService: AiChatService,
-//     private cdr: ChangeDetectorRef,
-//   ) {}
-
-//   // =========================================================
-//   // QUICK QUESTIONS
-//   // =========================================================
-
-//   get quickQuestions(): string[] {
-//     if (this.role === 'ADMIN') {
-//       return [
-//         'How many employees are present today?',
-//         'How many pending leave requests are there?',
-//         "What is this month's payroll?",
-//         'When is the next holiday?',
-//       ];
-//     }
-
-//     return [
-//       'What is my attendance this month?',
-//       'How many pending leaves do I have?',
-//       'What is my latest salary?',
-//       'When is the next holiday?',
-//     ];
-//   }
-
-//   // =========================================================
-//   // OPEN / CLOSE
-//   // =========================================================
-
-//   toggleChat(): void {
-//     this.isOpen = !this.isOpen;
-
-//     if (this.isOpen) {
-//       setTimeout(() => this.scrollToBottom(), 50);
-//     }
-//   }
-
-//   closeChat(): void {
-//     this.isOpen = false;
-//   }
-
-//   // =========================================================
-//   // QUICK QUESTION
-//   // =========================================================
-
-//   sendQuickQuestion(question: string): void {
-//     if (this.loading) {
-//       return;
-//     }
-
-//     this.message = question;
-
-//     this.sendMessage();
-//   }
-
-//   // =========================================================
-//   // SEND MESSAGE
-//   // =========================================================
-
-//   sendMessage(): void {
-//     const text = this.message.trim();
-
-//     if (!text || this.loading) {
-//       return;
-//     }
-
-//     this.messages.push({
-//       sender: 'USER',
-//       text: text,
-//       timestamp: new Date(),
-//     });
-
-//     this.message = '';
-
-//     this.loading = true;
-
-//     this.cdr.detectChanges();
-
-//     setTimeout(() => this.scrollToBottom(), 20);
-
-//     this.aiChatService.sendMessage(text).subscribe({
-//       next: (res: any) => {
-//         this.messages.push({
-//           sender: 'AI',
-//           text: res?.answer || 'No response received.',
-//           timestamp: res?.timestamp ? new Date(res.timestamp) : new Date(),
-//         });
-
-//         this.loading = false;
-
-//         this.cdr.detectChanges();
-
-//         setTimeout(() => this.scrollToBottom(), 50);
-//       },
-
-//       error: (err: any) => {
-//         this.loading = false;
-
-//         let errorMessage = 'Unable to get a response right now.';
-
-//         if (err.status === 429) {
-//           errorMessage = 'AI free quota reached. Please try again later.';
-//         } else if (err.status === 401) {
-//           errorMessage = 'Your session has expired. Please login again.';
-//         } else if (err.status === 403) {
-//           errorMessage = 'You are not allowed to access this information.';
-//         } else if (err.error?.detail) {
-//           errorMessage = err.error.detail;
-//         } else if (err.error?.message) {
-//           errorMessage = err.error.message;
-//         }
-
-//         this.messages.push({
-//           sender: 'AI',
-//           text: errorMessage,
-//           error: true,
-//           timestamp: new Date(),
-//         });
-
-//         this.cdr.detectChanges();
-
-//         setTimeout(() => this.scrollToBottom(), 50);
-//       },
-//     });
-//   }
-
-//   // =========================================================
-//   // ENTER KEY
-//   // =========================================================
-
-//   onEnter(event: Event): void {
-//     const keyboardEvent = event as KeyboardEvent;
-
-//     if (keyboardEvent.shiftKey) {
-//       return;
-//     }
-
-//     keyboardEvent.preventDefault();
-
-//     this.sendMessage();
-//   }
-
-//   // =========================================================
-//   // CLEAR CHAT
-//   // =========================================================
-
-//   clearChat(): void {
-//     if (this.loading) {
-//       return;
-//     }
-
-//     this.messages = [
-//       {
-//         sender: 'AI',
-//         text: 'Chat cleared. How can I help you?',
-//         timestamp: new Date(),
-//       },
-//     ];
-
-//     this.cdr.detectChanges();
-
-//     setTimeout(() => this.scrollToBottom(), 50);
-//   }
-
-//   // =========================================================
-//   // MARKDOWN FORMAT
-//   // =========================================================
-
-//   formatMessage(text: string): string {
-//     if (!text) {
-//       return '';
-//     }
-
-//     return marked.parse(text) as string;
-//   }
-
-//   // =========================================================
-//   // SCROLL
-//   // =========================================================
-
-//   private scrollToBottom(): void {
-//     try {
-//       const element = this.chatBody?.nativeElement;
-
-//       if (!element) {
-//         return;
-//       }
-
-//       element.scrollTop = element.scrollHeight;
-//     } catch {}
-//   }
-// }
-
-import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
-
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { marked } from 'marked';
-
 import { AiChatService } from './ai-chat.service';
 
+interface QuickQuestion {
+  icon: string;
+  text: string;
+}
+
 interface ChatMessage {
+  id: string;
   sender: 'AI' | 'USER';
   text: string;
   timestamp: Date;
@@ -254,46 +31,77 @@ interface ChatMessage {
 })
 export class AiChat {
   @ViewChild('chatBody')
-  chatBody!: ElementRef;
-
-  private readonly CHAT_STORAGE_KEY = 'ems_ai_chat_history';
+  chatBody?: ElementRef<HTMLDivElement>;
 
   isOpen = false;
-
   loading = false;
-
   message = '';
 
-  role = localStorage.getItem('role') || '';
+  readonly role = (localStorage.getItem('role') || 'EMPLOYEE').toUpperCase();
+
+  readonly userName =
+    localStorage.getItem('userName') ||
+    localStorage.getItem('employeeName') ||
+    (this.role.includes('ADMIN') ? 'Admin' : 'User');
+
+  private readonly currentUserKey =
+    localStorage.getItem('userId') ||
+    localStorage.getItem('employeeId') ||
+    this.userName;
+
+  // Admin and employee histories will not mix on the same browser.
+  private readonly CHAT_STORAGE_KEY = `ems_ai_chat_history_${this.role}_${this.currentUserKey}`;
 
   messages: ChatMessage[] = [];
 
   constructor(
-    private aiChatService: AiChatService,
-    private cdr: ChangeDetectorRef,
+    private readonly aiChatService: AiChatService,
+    private readonly cdr: ChangeDetectorRef,
   ) {
     this.loadChatHistory();
   }
 
   // =========================================================
-  // QUICK QUESTIONS
+  // ROLE-BASED UI
   // =========================================================
 
-  get quickQuestions(): string[] {
-    if (this.role === 'ADMIN') {
+  get isAdmin(): boolean {
+    return this.role.includes('ADMIN');
+  }
+
+  get assistantTitle(): string {
+    return this.isAdmin ? 'EMS Admin AI' : 'EMS AI Assistant';
+  }
+
+  get assistantSubtitle(): string {
+    return this.isAdmin ? 'Admin Workspace' : 'Employee Assistant';
+  }
+
+  get chatPlaceholder(): string {
+    return this.isAdmin
+      ? 'Ask about employees, attendance, leaves, payroll...'
+      : 'Ask about your attendance, leave, salary...';
+  }
+
+  get quickQuestions(): QuickQuestion[] {
+    if (this.isAdmin) {
       return [
-        'How many employees are present today?',
-        'How many pending leave requests are there?',
-        "What is this month's payroll?",
-        'When is the next holiday?',
+        { icon: 'bi-speedometer2', text: "Today's EMS summary" },
+        { icon: 'bi-people', text: 'Employee overview' },
+        { icon: 'bi-calendar2-check', text: 'Pending leaves' },
+        { icon: 'bi-clock-history', text: 'Attendance summary' },
+        { icon: 'bi-cash-stack', text: 'Payroll summary' },
+        { icon: 'bi-calendar-event', text: 'Upcoming holidays' },
       ];
     }
 
     return [
-      'What is my attendance this month?',
-      'How many pending leaves do I have?',
-      'What is my latest salary?',
-      'When is the next holiday?',
+      { icon: 'bi-person-check', text: 'My attendance' },
+      { icon: 'bi-clock', text: 'My working hours' },
+      { icon: 'bi-calendar2-week', text: 'My leaves' },
+      { icon: 'bi-wallet2', text: 'My salary' },
+      { icon: 'bi-stars', text: 'My performance' },
+      { icon: 'bi-calendar-event', text: 'Upcoming holidays' },
     ];
   }
 
@@ -305,7 +113,7 @@ export class AiChat {
     this.isOpen = !this.isOpen;
 
     if (this.isOpen) {
-      setTimeout(() => this.scrollToBottom(), 50);
+      this.scrollToBottom(50);
     }
   }
 
@@ -323,7 +131,6 @@ export class AiChat {
     }
 
     this.message = question;
-
     this.sendMessage();
   }
 
@@ -338,135 +145,146 @@ export class AiChat {
       return;
     }
 
-    // USER MESSAGE
-
-    this.messages.push({
-      sender: 'USER',
-      text,
-      timestamp: new Date(),
-    });
-
+    this.messages.push(this.createMessage('USER', text));
     this.saveChatHistory();
 
     this.message = '';
-
     this.loading = true;
 
     this.cdr.detectChanges();
-
-    setTimeout(() => this.scrollToBottom(), 20);
-
-    // API CALL
+    this.scrollToBottom(20);
 
     this.aiChatService.sendMessage(text).subscribe({
-      next: (res: any) => {
-        this.messages.push({
-          sender: 'AI',
-
-          text: res?.answer || 'No response received.',
-
-          timestamp: res?.timestamp ? new Date(res.timestamp) : new Date(),
-        });
-
-        // SAVE AI RESPONSE
-
-        this.saveChatHistory();
+      next: (response: unknown) => {
+        this.messages.push(
+          this.createMessage('AI', this.extractAnswer(response)),
+        );
 
         this.loading = false;
-
+        this.saveChatHistory();
         this.cdr.detectChanges();
-
-        setTimeout(() => this.scrollToBottom(), 50);
+        this.scrollToBottom(50);
       },
 
-      error: (err: any) => {
+      error: (error: any) => {
         this.loading = false;
 
-        let errorMessage = 'Unable to get a response right now.';
-
-        if (err.status === 429) {
-          errorMessage = 'AI free quota reached. Please try again later.';
-        } else if (err.status === 401) {
-          errorMessage = 'Your session has expired. Please login again.';
-        } else if (err.status === 403) {
-          errorMessage = 'You are not allowed to access this information.';
-        } else if (err.error?.detail) {
-          errorMessage = err.error.detail;
-        } else if (err.error?.message) {
-          errorMessage = err.error.message;
-        }
-
-        this.messages.push({
-          sender: 'AI',
-          text: errorMessage,
-          error: true,
-          timestamp: new Date(),
-        });
+        this.messages.push(
+          this.createMessage('AI', this.extractErrorMessage(error), true),
+        );
 
         this.saveChatHistory();
-
         this.cdr.detectChanges();
-
-        setTimeout(() => this.scrollToBottom(), 50);
+        this.scrollToBottom(50);
       },
     });
+  }
+
+  // Supports string responses as well as { answer }, { response } or { message }.
+  private extractAnswer(response: unknown): string {
+    if (typeof response === 'string') {
+      return response.trim() || 'No response received.';
+    }
+
+    if (!response || typeof response !== 'object') {
+      return 'No response received.';
+    }
+
+    const data = response as Record<string, unknown>;
+    const answer = data['answer'] ?? data['response'] ?? data['message'];
+
+    if (typeof answer === 'string' && answer.trim()) {
+      return answer.trim();
+    }
+
+    try {
+      return JSON.stringify(response, null, 2);
+    } catch {
+      return 'AI response received.';
+    }
+  }
+
+  private extractErrorMessage(error: any): string {
+    if (error?.status === 429) {
+      return 'AI free quota reached. Please try again later.';
+    }
+
+    if (error?.status === 401) {
+      return 'Your session has expired. Please login again.';
+    }
+
+    if (error?.status === 403) {
+      return 'You are not allowed to access this information.';
+    }
+
+    // Backend sometimes returns a plain string instead of a JSON object.
+    if (typeof error?.error === 'string' && error.error.trim()) {
+      return error.error.trim();
+    }
+
+    if (typeof error?.error?.detail === 'string') {
+      return error.error.detail;
+    }
+
+    if (typeof error?.error?.message === 'string') {
+      return error.error.message;
+    }
+
+    if (typeof error?.message === 'string' && error.message.trim()) {
+      return error.message;
+    }
+
+    return 'Unable to get a response right now.';
   }
 
   // =========================================================
   // ENTER KEY
   // =========================================================
 
-  onEnter(event: Event): void {
-    const keyboardEvent = event as KeyboardEvent;
+ onEnter(event: Event): void {
+  const keyboardEvent = event as KeyboardEvent;
 
-    // SHIFT + ENTER = NEW LINE
-
-    if (keyboardEvent.shiftKey) {
-      return;
-    }
-
-    // ENTER = SEND
-
-    keyboardEvent.preventDefault();
-
-    this.sendMessage();
+  if (keyboardEvent.shiftKey) {
+    return;
   }
+
+  keyboardEvent.preventDefault();
+  this.sendMessage();
+}
 
   // =========================================================
   // CLEAR CHAT
   // =========================================================
 
   clearChat(): void {
-    if (this.loading) {
+    if (this.loading || this.messages.length <= 1) {
       return;
     }
 
     localStorage.removeItem(this.CHAT_STORAGE_KEY);
-
     this.messages = [this.getWelcomeMessage()];
-
     this.saveChatHistory();
 
     this.cdr.detectChanges();
-
-    setTimeout(() => this.scrollToBottom(), 50);
+    this.scrollToBottom(50);
   }
 
   // =========================================================
-  // SAVE CHAT HISTORY
+  // CHAT HISTORY
   // =========================================================
 
   private saveChatHistory(): void {
     try {
-      localStorage.setItem(this.CHAT_STORAGE_KEY, JSON.stringify(this.messages));
+      // Prevent unlimited localStorage growth.
+      const recentMessages = this.messages.slice(-100);
+      localStorage.setItem(
+        this.CHAT_STORAGE_KEY,
+        JSON.stringify(recentMessages),
+      );
     } catch (error) {
       console.error('Unable to save AI chat history:', error);
     }
   }
-
-  // =========================================================
-  // LOAD CHAT HISTORY
-  // =========================================================
 
   private loadChatHistory(): void {
     try {
@@ -474,75 +292,184 @@ export class AiChat {
 
       if (!savedHistory) {
         this.messages = [this.getWelcomeMessage()];
-
         return;
       }
 
-      const parsedMessages = JSON.parse(savedHistory);
+      const parsedMessages: unknown = JSON.parse(savedHistory);
 
-      if (!Array.isArray(parsedMessages) || parsedMessages.length === 0) {
+      if (!Array.isArray(parsedMessages)) {
         this.messages = [this.getWelcomeMessage()];
-
         return;
       }
 
-      this.messages = parsedMessages.map((item: any) => ({
-        ...item,
+      const validMessages = parsedMessages
+        .filter(
+          (item: any) =>
+            item &&
+            (item.sender === 'AI' || item.sender === 'USER') &&
+            typeof item.text === 'string',
+        )
+        .map(
+          (item: any): ChatMessage => ({
+            id: typeof item.id === 'string' ? item.id : this.createMessageId(),
+            sender: item.sender,
+            text: item.text,
+            timestamp: item.timestamp ? new Date(item.timestamp) : new Date(),
+            error: item.error === true,
+          }),
+        );
 
-        timestamp: item.timestamp ? new Date(item.timestamp) : new Date(),
-      }));
+      this.messages =
+        validMessages.length > 0
+          ? validMessages
+          : [this.getWelcomeMessage()];
     } catch (error) {
       console.error('Unable to load AI chat history:', error);
-
       this.messages = [this.getWelcomeMessage()];
     }
   }
 
-  // =========================================================
-  // WELCOME MESSAGE
-  // =========================================================
-
   private getWelcomeMessage(): ChatMessage {
-    let text =
-      'Hi! I can help you with attendance, leave, salary, holidays and other EMS information.';
+    const text = this.isAdmin
+      ? `Hi ${this.userName}! I'm your EMS Admin AI assistant. I can help with employee attendance, pending leaves, payroll, holidays and EMS insights.`
+      : `Hi ${this.userName}! I'm your EMS AI assistant. I can help with your attendance, leave, salary, holidays and other EMS information.`;
 
-    if (this.role === 'ADMIN') {
-      text =
-        'Hi! I can help you with employee attendance, pending leaves, payroll, holidays and other EMS information.';
-    }
+    return this.createMessage('AI', text);
+  }
 
+  private createMessage(
+    sender: 'AI' | 'USER',
+    text: string,
+    error = false,
+  ): ChatMessage {
     return {
-      sender: 'AI',
+      id: this.createMessageId(),
+      sender,
       text,
+      error,
       timestamp: new Date(),
     };
   }
 
+  private createMessageId(): string {
+    return `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+  }
+
   // =========================================================
-  // MARKDOWN
+  // SAFE AI MESSAGE FORMATTER
   // =========================================================
 
-  formatMessage(text: string): string {
-    if (!text) {
+  formatMessage(value: string | null | undefined): string {
+    if (!value) {
       return '';
     }
 
-    return marked.parse(text) as string;
+    const lines = String(value)
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean);
+
+    return lines
+      .map((line) => {
+        const headingMatch = line.match(/^#{1,6}\s+(.+)$/);
+
+        if (headingMatch) {
+          return `<p class="ai-heading">${this.renderInlineBold(headingMatch[1])}</p>`;
+        }
+
+        const bulletMatch = line.match(/^[-*•]\s+(.+)$/);
+
+        if (bulletMatch) {
+          const content = bulletMatch[1];
+          const metricMatch = content.match(/^\*\*(.+?):\*\*\s*(.+)$/);
+
+          if (metricMatch) {
+            return this.renderMetric(metricMatch[1], metricMatch[2]);
+          }
+
+          return `
+            <div class="ai-bullet">
+              <span class="ai-dot"></span>
+              <span>${this.renderInlineBold(content)}</span>
+            </div>
+          `;
+        }
+
+        const numberedMatch = line.match(/^(\d+)[.)]\s+(.+)$/);
+
+        if (numberedMatch) {
+          return `
+            <div class="ai-numbered">
+              <span class="ai-number">${numberedMatch[1]}</span>
+              <span>${this.renderInlineBold(numberedMatch[2])}</span>
+            </div>
+          `;
+        }
+
+        const metricMatch = line.match(/^\*\*(.+?):\*\*\s*(.+)$/);
+
+        if (metricMatch) {
+          return this.renderMetric(metricMatch[1], metricMatch[2]);
+        }
+
+        return `<p class="ai-paragraph">${this.renderInlineBold(line)}</p>`;
+      })
+      .join('');
+  }
+
+  private renderMetric(label: string, value: string): string {
+    return `
+      <div class="ai-metric">
+        <span class="ai-metric-label">${this.renderInlineBold(label)}</span>
+        <span class="ai-metric-value">${this.renderInlineBold(value)}</span>
+      </div>
+    `;
+  }
+
+  private renderInlineBold(value: string): string {
+    return this.escapeHtml(value).replace(
+      /\*\*(.+?)\*\*/g,
+      '<strong>$1</strong>',
+    );
+  }
+
+  private escapeHtml(value: string): string {
+    return value
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  // =========================================================
+  // TRACK BY
+  // =========================================================
+
+  trackByMessage(_index: number, item: ChatMessage): string {
+    return item.id;
+  }
+
+  trackByQuestion(_index: number, item: QuickQuestion): string {
+    return item.text;
   }
 
   // =========================================================
   // SCROLL
   // =========================================================
 
-  private scrollToBottom(): void {
-    try {
+  private scrollToBottom(delay = 0): void {
+    setTimeout(() => {
       const element = this.chatBody?.nativeElement;
 
       if (!element) {
         return;
       }
 
-      element.scrollTop = element.scrollHeight;
-    } catch {}
+      element.scrollTo({
+        top: element.scrollHeight,
+        behavior: 'smooth',
+      });
+    }, delay);
   }
 }

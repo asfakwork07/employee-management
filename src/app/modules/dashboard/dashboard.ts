@@ -6,15 +6,15 @@ import { Chart, registerables, ChartData, ChartOptions } from 'chart.js';
 
 import { BaseChartDirective } from 'ng2-charts';
 
-import { DashboardService } from '../dashboard-service';
-import { NotificationService } from '../../../layout/navbar/notification.service';
+import { DashboardService } from './dashboard-service';
+import { NotificationService } from '../../layout/navbar/notification.service';
 import { Router } from '@angular/router';
-import { HolidayService } from '../../holidays/holiday.service';
-import { EmployeeService } from '../../services/employee';
+import { HolidayService } from '../holidays/holiday.service';
+import { EmployeeService } from '../employees/employee-service';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
-import { AdminDailyBrief } from '../../admin-daily-brief.model';
-import { AiChatService } from '../../ai-chat/ai-chat.service';
+import { AdminDailyBrief } from './admin-daily-brief.model';
+import { AiChatService } from '../ai-chat/ai-chat.service';
 
 Chart.register(...registerables);
 
@@ -225,7 +225,7 @@ export class Dashboard implements OnInit {
     this.loadUpcomingHoliday();
 
     if (localStorage.getItem('role') === 'ADMIN') {
-      this.loadAdminDailyBrief();
+      // this.loadAdminDailyBrief();
     }
   }
 
@@ -560,12 +560,23 @@ export class Dashboard implements OnInit {
       },
 
       error: (error) => {
+        // console.error('Unable to load AI daily brief', error);
+
+        // this.aiBriefLoading = false;
+
+        // this.aiBriefError = 'Unable to generate AI daily brief.';
+        // this.cdr.detectChanges();
         console.error('Unable to load AI daily brief', error);
 
         this.aiBriefLoading = false;
 
-        this.aiBriefError = 'Unable to generate AI daily brief.';
-          this.cdr.detectChanges();
+        // Backend error message
+        this.aiBriefError =
+          typeof error?.error === 'string'
+            ? error.error
+            : error?.error?.message || error?.message || 'Unable to generate AI daily brief.';
+
+        this.cdr.detectChanges();
       },
     });
   }

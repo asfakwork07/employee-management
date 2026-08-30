@@ -12,7 +12,7 @@ import {
 
 import Swal from 'sweetalert2';
 
-import { EmployeeService } from '../services/employee';
+import { EmployeeService } from './employee-service';
 import { AttendanceService } from '../attendance/attendance.service';
 import { LeavesService } from '../leaves/leaves.service';
 import { SalaryService } from '../salary/salary.service';
@@ -528,14 +528,17 @@ export class GetEmployeeDetails implements OnInit {
 
     if (tab === 'attendance' && this.employeeAttendance.length === 0) {
       this.loadEmployeeAttendance();
+      this.cdr.detectChanges();
     }
 
     if (tab === 'leaves' && this.employeeLeaves.length === 0) {
       this.loadEmployeeLeaves();
+      this.cdr.detectChanges();
     }
 
     if (tab === 'salary' && this.employeeSalary.length === 0) {
       this.loadEmployeeSalary();
+      this.cdr.detectChanges();
     }
   }
 

@@ -238,7 +238,7 @@
 
             <th class="text-right px-5 py-4 text-sm font-semibold">Net Salary</th>
 
-            <th class="text-center px-5 py-4 text-sm font-semibold">Payslip</th>
+            <th class="text-center px-5 py-4 text-sm font-semibold">Actions</th>
           </tr>
         </thead>
 
@@ -306,16 +306,30 @@
 
             <!-- Payslip -->
 
-            <td class="px-5 py-4 text-center">
-              <button
-                type="button"
-                (click)="viewPayslip(salary.id)"
-                title="View Payslip"
-                class="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 font-medium text-sm transition"
-              >
-                <i class="bi bi-file-earmark-text"></i>
-                View
-              </button>
+            <td class="px-5 py-4">
+              <div class="flex items-center justify-center gap-2">
+                <button
+                  type="button"
+                  (click)="viewPayslip(salary.id)"
+                  title="View Payslip"
+                  class="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 font-medium text-sm transition cursor-pointer"
+                >
+                  <i class="bi bi-file-earmark-text"></i>
+
+                  View
+                </button>
+
+                <button
+                  type="button"
+                  (click)="explainWithAi(salary.id)"
+                  title="Explain salary with AI"
+                  class="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-purple-100 text-purple-700 hover:bg-purple-200 font-medium text-sm transition cursor-pointer"
+                >
+                  <i class="bi bi-stars"></i>
+
+                  AI Explain
+                </button>
+              </div>
             </td>
           </tr>
 
@@ -692,6 +706,220 @@
       >
         <i class="bi bi-download"></i>
         Download PDF
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- AI Explanation Modal -->
+<div
+  *ngIf="showAiModal"
+  class="fixed inset-0 z-[10000] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
+  (click)="closeAiModal()"
+>
+  <div
+    class="relative w-full max-w-3xl bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[calc(100vh-2rem)] flex flex-col"
+    (click)="$event.stopPropagation()"
+  >
+    <div
+      class="relative overflow-hidden bg-gradient-to-r from-indigo-600 via-purple-600 to-violet-600 px-6 py-5 text-white shrink-0"
+    >
+      <div class="absolute -right-12 -top-12 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
+
+      <div class="relative flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div
+            class="w-12 h-12 rounded-xl bg-white/15 border border-white/20 flex items-center justify-center"
+          >
+            <i class="bi bi-stars text-2xl"></i>
+          </div>
+
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-xl font-bold">AI Payroll Explainer</h2>
+
+              <span
+                class="px-2 py-0.5 rounded-full bg-white/20 text-[10px] font-bold tracking-wide"
+              >
+                AI
+              </span>
+            </div>
+
+            <p class="text-sm text-purple-100 mt-1">Understand your salary breakdown</p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          (click)="closeAiModal()"
+          [disabled]="aiLoading"
+          class="w-10 h-10 rounded-xl flex items-center justify-center bg-white/10 hover:bg-white/20 disabled:opacity-50 transition cursor-pointer"
+        >
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+    </div>
+
+    <div
+      *ngIf="aiLoading"
+      class="flex-1 min-h-[350px] flex flex-col items-center justify-center p-10"
+    >
+      <div class="relative">
+        <div
+          class="w-16 h-16 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center"
+        >
+          <i class="bi bi-stars text-3xl animate-pulse"></i>
+        </div>
+
+        <div
+          class="absolute -top-1 -right-1 w-5 h-5 bg-indigo-600 rounded-full border-4 border-white animate-pulse"
+        ></div>
+      </div>
+
+      <h3 class="mt-5 text-lg font-semibold text-slate-800">Analyzing salary breakdown</h3>
+
+      <p class="mt-2 text-sm text-gray-500 text-center">
+        AI is preparing a simple explanation of earnings and deductions.
+      </p>
+    </div>
+
+    <div *ngIf="!aiLoading && aiExplanation" class="flex-1 overflow-y-auto p-6">
+      <div
+        class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-slate-50 border border-slate-200 rounded-xl p-4"
+      >
+        <div>
+          <p class="text-xs uppercase tracking-wide text-gray-500">Employee</p>
+
+          <p class="font-semibold text-slate-800 mt-1">
+            {{ aiExplanation.employeeName }}
+          </p>
+        </div>
+
+        <div class="sm:text-right">
+          <p class="text-xs uppercase tracking-wide text-gray-500">Salary Period</p>
+
+          <p class="font-semibold text-slate-800 mt-1">
+            {{ getMonthName(aiExplanation.salaryMonth) }}
+
+            {{ aiExplanation.salaryYear }}
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5">
+        <div class="rounded-xl border border-green-100 bg-green-50 p-4">
+          <p class="text-xs font-medium text-green-700">Gross Salary</p>
+
+          <p class="mt-2 text-xl font-bold text-green-700">
+            ₹{{ aiExplanation.grossSalary | number: '1.2-2' }}
+          </p>
+        </div>
+
+        <div class="rounded-xl border border-red-100 bg-red-50 p-4">
+          <p class="text-xs font-medium text-red-700">Total Deductions</p>
+
+          <p class="mt-2 text-xl font-bold text-red-700">
+            ₹{{ aiExplanation.totalDeductions | number: '1.2-2' }}
+          </p>
+        </div>
+
+        <div class="rounded-xl border border-blue-100 bg-blue-50 p-4">
+          <p class="text-xs font-medium text-blue-700">Net Salary</p>
+
+          <p class="mt-2 text-xl font-bold text-blue-700">
+            ₹{{ aiExplanation.netSalary | number: '1.2-2' }}
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="mt-5 rounded-2xl border border-purple-100 bg-gradient-to-br from-purple-50 via-white to-indigo-50 p-5"
+      >
+        <div class="flex items-start gap-4">
+          <div
+            class="w-10 h-10 shrink-0 rounded-xl bg-purple-600 text-white flex items-center justify-center shadow-md"
+          >
+            <i class="bi bi-stars"></i>
+          </div>
+
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="font-semibold text-slate-800">AI Explanation</h3>
+
+              <span
+                class="text-[10px] px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full font-bold"
+              >
+                GEMINI
+              </span>
+            </div>
+
+            <p class="mt-3 text-sm leading-7 text-slate-700 whitespace-pre-line">
+              {{ aiExplanation.explanation }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-5 grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <div class="border border-gray-200 rounded-lg p-3">
+          <p class="text-xs text-gray-500">Basic</p>
+
+          <p class="font-semibold mt-1">₹{{ aiExplanation.basicSalary | number: '1.2-2' }}</p>
+        </div>
+
+        <div class="border border-gray-200 rounded-lg p-3">
+          <p class="text-xs text-gray-500">HRA</p>
+
+          <p class="font-semibold mt-1">₹{{ aiExplanation.hra | number: '1.2-2' }}</p>
+        </div>
+
+        <div class="border border-gray-200 rounded-lg p-3">
+          <p class="text-xs text-gray-500">Allowance</p>
+
+          <p class="font-semibold mt-1">₹{{ aiExplanation.allowance | number: '1.2-2' }}</p>
+        </div>
+
+        <div class="border border-gray-200 rounded-lg p-3">
+          <p class="text-xs text-gray-500">PF</p>
+
+          <p class="font-semibold mt-1">₹{{ aiExplanation.pf | number: '1.2-2' }}</p>
+        </div>
+
+        <div class="border border-gray-200 rounded-lg p-3">
+          <p class="text-xs text-gray-500">Professional Tax</p>
+
+          <p class="font-semibold mt-1">₹{{ aiExplanation.professionalTax | number: '1.2-2' }}</p>
+        </div>
+
+        <div class="border border-gray-200 rounded-lg p-3">
+          <p class="text-xs text-gray-500">Income Tax</p>
+
+          <p class="font-semibold mt-1">₹{{ aiExplanation.incomeTax | number: '1.2-2' }}</p>
+        </div>
+      </div>
+
+      <div
+        class="mt-5 flex items-start gap-2 bg-amber-50 border border-amber-100 rounded-lg p-3 text-xs text-amber-800"
+      >
+        <i class="bi bi-info-circle mt-0.5"></i>
+
+        <span>
+          AI explanation is generated from the salary values stored in EMS. Refer to your official
+          payslip for payroll records.
+        </span>
+      </div>
+    </div>
+
+    <div
+      *ngIf="!aiLoading && aiExplanation"
+      class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end shrink-0"
+    >
+      <button
+        type="button"
+        (click)="closeAiModal()"
+        class="px-5 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-900 text-white font-medium transition cursor-pointer"
+      >
+        Close
       </button>
     </div>
   </div>

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 
 import { LeavesService } from './leaves.service';
-import { EmployeeService } from '../services/employee';
+import { EmployeeService } from '../employees/employee-service';
 
 @Component({
   selector: 'app-leaves',

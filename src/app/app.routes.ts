@@ -10,7 +10,7 @@ import { LoginComponent } from './auth/login/login';
 
 import { Layout } from './layout/layout';
 
-import { Dashboard } from './modules/dashboard/dashboard/dashboard';
+import { Dashboard } from './modules/dashboard/dashboard';
 import { Attendance } from './modules/attendance/attendance';
 import { Leaves } from './modules/leaves/leaves';
 import { Salary } from './modules/salary/salary';

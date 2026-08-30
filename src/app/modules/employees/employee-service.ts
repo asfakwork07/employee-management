@@ -52,9 +52,10 @@
 
 // }
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpContextToken, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpContextToken, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_URL } from '../../auth/config/api.config';
+import { SKIP_GLOBAL_LOADER } from '../../auth/http-context.tokens';
 
 export interface Employee {
   id?: number;
@@ -121,6 +122,10 @@ export class EmployeeService {
         year: year.toString(),
         regenerate: regenerate.toString(),
       },
+       context: new HttpContext().set(
+        SKIP_GLOBAL_LOADER,
+        true,
+      ),
     });
   }
 
@@ -135,6 +140,10 @@ export class EmployeeService {
         year: year.toString(),
         regenerate: regenerate.toString(),
       },
+       context: new HttpContext().set(
+        SKIP_GLOBAL_LOADER,
+        true,
+      ),
     });
   }
 

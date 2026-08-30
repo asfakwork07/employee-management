@@ -1,337 +1,417 @@
-<div class="space-y-6">
-  <!-- HEADER -->
+<div class="relative space-y-6 pb-6">
+  <!-- HERO HEADER -->
+  <section
+    class="relative overflow-hidden rounded-3xl px-5 py-6 text-white shadow-lg sm:px-7 sm:py-7"
+    [ngClass]="
+      role === 'ADMIN'
+        ? 'bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 shadow-purple-200/60'
+        : 'bg-gradient-to-br from-blue-600 via-sky-600 to-cyan-500 shadow-blue-200/60'
+    "
+  >
+    <div
+      class="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-white/10"
+    ></div>
+    <div
+      class="pointer-events-none absolute -bottom-24 right-32 h-48 w-48 rounded-full bg-white/10"
+    ></div>
+    <div
+      class="pointer-events-none absolute left-1/2 top-0 h-32 w-32 rotate-45 rounded-3xl bg-white/5"
+    ></div>
 
-  <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-    <div>
-      <h1 class="text-2xl font-bold text-slate-800">Holidays</h1>
+    <div class="relative flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+      <div class="flex items-start gap-4">
+        <div
+          class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/15 shadow-inner ring-1 ring-white/20 backdrop-blur-sm"
+        >
+          <i class="bi bi-calendar2-week text-2xl"></i>
+        </div>
 
-      <p class="text-sm text-gray-500 mt-1">
-        {{
-          role === 'ADMIN'
-            ? 'Manage company holidays and calendar events'
-            : 'View upcoming company holidays'
-        }}
-      </p>
+        <div>
+          <span
+            class="mb-2 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ring-1 ring-white/15"
+          >
+            <i class="bi" [ngClass]="role === 'ADMIN' ? 'bi-shield-check' : 'bi-person-check'"></i>
+            {{ role === 'ADMIN' ? 'Admin Workspace' : 'Employee Calendar' }}
+          </span>
+
+          <h1 class="text-2xl font-extrabold tracking-tight sm:text-3xl">Holiday Calendar</h1>
+          <p class="mt-1.5 max-w-2xl text-sm leading-6 text-white/75">
+            {{
+              role === 'ADMIN'
+                ? 'Plan, organize and manage company holidays from one centralized calendar.'
+                : 'Stay informed about upcoming company holidays and important calendar events.'
+            }}
+          </p>
+        </div>
+      </div>
+
+      <button
+        *ngIf="role === 'ADMIN'"
+        type="button"
+        (click)="openAddModal()"
+        class="inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold text-indigo-700 shadow-lg shadow-slate-900/10 transition-all hover:-translate-y-0.5 hover:bg-indigo-50 hover:shadow-xl active:translate-y-0"
+      >
+        <i class="bi bi-calendar-plus text-base"></i>
+        Add New Holiday
+      </button>
     </div>
-
-    <button
-      *ngIf="role === 'ADMIN'"
-      type="button"
-      (click)="openAddModal()"
-      class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-sm transition"
-    >
-      <i class="bi bi-calendar-plus"></i>
-
-      Add Holiday
-    </button>
-  </div>
+  </section>
 
   <!-- SUMMARY CARDS -->
-
-  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-    <!-- TOTAL -->
-
-    <div
-      class="bg-white rounded-xl border border-gray-200 border-l-4 border-l-blue-500 shadow-sm p-5"
+  <section class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <article
+      class="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg"
     >
-      <div class="flex items-center justify-between">
+      <div
+        class="pointer-events-none absolute -right-7 -top-7 h-24 w-24 rounded-full bg-blue-50 transition-transform duration-300 group-hover:scale-125"
+      ></div>
+      <div class="relative flex items-start justify-between gap-4">
         <div>
-          <p class="text-sm text-gray-500">Total Holidays</p>
-
-          <h2 class="text-3xl font-bold text-blue-600 mt-2">
+          <p class="text-xs font-bold uppercase tracking-[0.08em] text-slate-400">Total Holidays</p>
+          <h2 class="mt-2 text-3xl font-extrabold tracking-tight text-slate-800">
             {{ totalHolidays }}
           </h2>
+          <p class="mt-1 text-xs text-slate-400">In the company calendar</p>
         </div>
-
         <div
-          class="w-11 h-11 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center"
+          class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600 ring-1 ring-blue-100"
         >
-          <i class="bi bi-calendar-event text-xl"></i>
+          <i class="bi bi-calendar3 text-xl"></i>
         </div>
       </div>
-    </div>
+    </article>
 
-    <!-- UPCOMING -->
-
-    <div
-      class="bg-white rounded-xl border border-gray-200 border-l-4 border-l-green-500 shadow-sm p-5"
+    <article
+      class="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-lg"
     >
-      <div class="flex items-center justify-between">
+      <div
+        class="pointer-events-none absolute -right-7 -top-7 h-24 w-24 rounded-full bg-emerald-50 transition-transform duration-300 group-hover:scale-125"
+      ></div>
+      <div class="relative flex items-start justify-between gap-4">
         <div>
-          <p class="text-sm text-gray-500">Upcoming</p>
-
-          <h2 class="text-3xl font-bold text-green-600 mt-2">
+          <p class="text-xs font-bold uppercase tracking-[0.08em] text-slate-400">Upcoming</p>
+          <h2 class="mt-2 text-3xl font-extrabold tracking-tight text-emerald-600">
             {{ upcomingHolidays }}
           </h2>
+          <p class="mt-1 text-xs text-slate-400">Holidays still ahead</p>
         </div>
-
         <div
-          class="w-11 h-11 rounded-full bg-green-100 text-green-600 flex items-center justify-center"
+          class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 ring-1 ring-emerald-100"
         >
-          <i class="bi bi-calendar-check text-xl"></i>
+          <i class="bi bi-calendar2-check text-xl"></i>
         </div>
       </div>
-    </div>
+    </article>
 
-    <!-- NATIONAL -->
-
-    <div
-      class="bg-white rounded-xl border border-gray-200 border-l-4 border-l-indigo-500 shadow-sm p-5"
+    <article
+      class="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-indigo-200 hover:shadow-lg"
     >
-      <div class="flex items-center justify-between">
+      <div
+        class="pointer-events-none absolute -right-7 -top-7 h-24 w-24 rounded-full bg-indigo-50 transition-transform duration-300 group-hover:scale-125"
+      ></div>
+      <div class="relative flex items-start justify-between gap-4">
         <div>
-          <p class="text-sm text-gray-500">National</p>
-
-          <h2 class="text-3xl font-bold text-indigo-600 mt-2">
+          <p class="text-xs font-bold uppercase tracking-[0.08em] text-slate-400">National</p>
+          <h2 class="mt-2 text-3xl font-extrabold tracking-tight text-indigo-600">
             {{ nationalHolidays }}
           </h2>
+          <p class="mt-1 text-xs text-slate-400">National observances</p>
         </div>
-
         <div
-          class="w-11 h-11 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center"
+          class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100"
         >
           <i class="bi bi-flag-fill text-xl"></i>
         </div>
       </div>
-    </div>
+    </article>
 
-    <!-- FESTIVAL -->
-
-    <div
-      class="bg-white rounded-xl border border-gray-200 border-l-4 border-l-purple-500 shadow-sm p-5"
+    <article
+      class="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-purple-200 hover:shadow-lg"
     >
-      <div class="flex items-center justify-between">
+      <div
+        class="pointer-events-none absolute -right-7 -top-7 h-24 w-24 rounded-full bg-purple-50 transition-transform duration-300 group-hover:scale-125"
+      ></div>
+      <div class="relative flex items-start justify-between gap-4">
         <div>
-          <p class="text-sm text-gray-500">Festival</p>
-
-          <h2 class="text-3xl font-bold text-purple-600 mt-2">
+          <p class="text-xs font-bold uppercase tracking-[0.08em] text-slate-400">Festival</p>
+          <h2 class="mt-2 text-3xl font-extrabold tracking-tight text-purple-600">
             {{ festivalHolidays }}
           </h2>
+          <p class="mt-1 text-xs text-slate-400">Festival celebrations</p>
         </div>
-
         <div
-          class="w-11 h-11 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center"
+          class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-purple-50 text-purple-600 ring-1 ring-purple-100"
         >
           <i class="bi bi-stars text-xl"></i>
         </div>
       </div>
-    </div>
-  </div>
+    </article>
+  </section>
 
-  <!-- FILTERS -->
-
-  <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-5">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <!-- SEARCH -->
-
-      <div class="md:col-span-2">
-        <label class="block text-sm font-semibold text-slate-600 mb-2"> Search Holiday </label>
-
-        <div class="relative">
-          <i class="bi bi-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-
-          <input
-            type="text"
-            [(ngModel)]="searchText"
-            (input)="applyFilters()"
-            placeholder="Search holiday name or description..."
-            class="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-      </div>
-
-      <!-- TYPE -->
-
+  <!-- SEARCH AND FILTERS -->
+  <section class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+    <div class="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <label class="block text-sm font-semibold text-slate-600 mb-2"> Holiday Type </label>
-
-        <div class="flex gap-2">
-          <select
-            [(ngModel)]="selectedType"
-            (change)="applyFilters()"
-            class="flex-1 px-4 py-3 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="ALL">All Types</option>
-
-            <option *ngFor="let type of holidayTypes" [value]="type">
-              {{ type }}
-            </option>
-          </select>
-
-          <button
-            type="button"
-            (click)="resetFilters()"
-            title="Reset Filters"
-            class="w-12 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition"
-          >
-            <i class="bi bi-arrow-counterclockwise"></i>
-          </button>
-        </div>
+        <h2 class="font-bold text-slate-800">Find a holiday</h2>
+        <p class="mt-0.5 text-xs text-slate-500">Search by name or filter by holiday type</p>
       </div>
-    </div>
-  </div>
-
-  <!-- HOLIDAY LIST -->
-
-  <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-    <div
-      class="px-5 py-4 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
-    >
-      <div>
-        <h2 class="text-lg font-semibold text-slate-800">Holiday Calendar</h2>
-
-        <p class="text-sm text-gray-500 mt-1">Organization holiday schedule</p>
-      </div>
-
-      <span class="text-sm text-gray-500">
-        Showing
-
-        <strong class="text-slate-700">
-          {{ filteredHolidays.length }}
-        </strong>
-
-        holidays
+      <span
+        class="inline-flex w-fit items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600"
+      >
+        <i class="bi bi-funnel"></i>
+        {{ filteredHolidays.length }} results
       </span>
     </div>
 
+    <div class="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1fr)_240px_auto]">
+      <div class="relative">
+        <i
+          class="bi bi-search pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+        ></i>
+        <input
+          type="text"
+          [(ngModel)]="searchText"
+          (input)="applyFilters()"
+          placeholder="Search holiday name or description..."
+          class="h-12 w-full rounded-xl border border-slate-300 bg-slate-50/60 py-3 pl-11 pr-11 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 hover:border-slate-400 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100"
+        />
+        <button
+          *ngIf="searchText"
+          type="button"
+          (click)="searchText = ''; applyFilters()"
+          class="absolute right-2.5 top-1/2 flex h-7 w-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-200 hover:text-slate-700"
+          title="Clear search"
+          aria-label="Clear search"
+        >
+          <i class="bi bi-x-lg text-xs"></i>
+        </button>
+      </div>
+
+      <div class="relative">
+        <i
+          class="bi bi-tag pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+        ></i>
+        <select
+          [(ngModel)]="selectedType"
+          (change)="applyFilters()"
+          class="h-12 w-full cursor-pointer appearance-none rounded-xl border border-slate-300 bg-slate-50/60 py-3 pl-11 pr-10 text-sm font-medium text-slate-700 outline-none transition hover:border-slate-400 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100"
+          aria-label="Holiday type"
+        >
+          <option value="ALL">All holiday types</option>
+          <option *ngFor="let type of holidayTypes" [value]="type">{{ type }}</option>
+        </select>
+        <i
+          class="bi bi-chevron-down pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400"
+        ></i>
+      </div>
+
+      <button
+        type="button"
+        (click)="resetFilters()"
+        class="inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-600 transition hover:border-slate-400 hover:bg-slate-50 hover:text-slate-800"
+        title="Reset filters"
+      >
+        <i class="bi bi-arrow-counterclockwise"></i>
+        <span class="lg:hidden xl:inline">Reset</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- HOLIDAY LIST -->
+  <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+    <div
+      class="flex flex-col gap-3 border-b border-slate-200 bg-white px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6"
+    >
+      <div class="flex items-center gap-3">
+        <div
+          class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600 ring-1 ring-blue-100"
+        >
+          <i class="bi bi-calendar4-week"></i>
+        </div>
+        <div>
+          <h2 class="font-bold text-slate-800">Organization Holidays</h2>
+          <p class="mt-0.5 text-xs text-slate-500">Complete holiday schedule</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 text-xs text-slate-500">
+        <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+        <strong class="text-slate-700">{{ upcomingHolidays }}</strong>
+        upcoming
+      </div>
+    </div>
+
     <!-- LOADING -->
-
-    <div *ngIf="loading" class="py-16 text-center text-gray-500">
-      <i class="bi bi-arrow-repeat inline-block animate-spin mr-2"></i>
-
-      Loading holidays...
+    <div *ngIf="loading" class="space-y-4 p-5 sm:p-6">
+      <div *ngFor="let row of [1, 2, 3, 4]" class="flex animate-pulse items-center gap-4">
+        <div class="h-12 w-12 shrink-0 rounded-xl bg-slate-200"></div>
+        <div class="flex-1 space-y-2">
+          <div class="h-3 w-1/3 rounded bg-slate-200"></div>
+          <div class="h-3 w-2/3 rounded bg-slate-100"></div>
+        </div>
+        <div class="hidden h-7 w-20 rounded-full bg-slate-100 sm:block"></div>
+      </div>
     </div>
 
     <!-- EMPTY -->
-
-    <div *ngIf="!loading && filteredHolidays.length === 0" class="py-16 px-5 text-center">
+    <div
+      *ngIf="!loading && filteredHolidays.length === 0"
+      class="flex flex-col items-center px-5 py-16 text-center sm:py-20"
+    >
       <div
-        class="w-14 h-14 mx-auto rounded-full bg-gray-100 text-gray-400 flex items-center justify-center"
+        class="relative flex h-20 w-20 items-center justify-center rounded-3xl bg-slate-100 text-slate-400"
       >
-        <i class="bi bi-calendar-x text-2xl"></i>
+        <i class="bi bi-calendar-x text-3xl"></i>
+        <span
+          class="absolute -right-1 -top-1 flex h-7 w-7 items-center justify-center rounded-full border-4 border-white bg-amber-400 text-white"
+        >
+          <i class="bi bi-search text-xs"></i>
+        </span>
       </div>
-
-      <p class="font-semibold text-slate-700 mt-3">No holidays found</p>
-
-      <p class="text-sm text-gray-500 mt-1">
+      <h3 class="mt-5 text-lg font-bold text-slate-800">No holidays found</h3>
+      <p class="mt-1 max-w-sm text-sm leading-6 text-slate-500">
         {{
           role === 'ADMIN'
-            ? 'Add a holiday or change your filters.'
-            : 'No holidays are currently available.'
+            ? 'Try changing your filters or add a new holiday to the company calendar.'
+            : 'Try changing your filters. No matching holidays are currently available.'
         }}
       </p>
+      <div class="mt-5 flex flex-wrap justify-center gap-2">
+        <button
+          type="button"
+          (click)="resetFilters()"
+          class="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
+        >
+          <i class="bi bi-arrow-counterclockwise"></i>
+          Reset Filters
+        </button>
+        <button
+          *ngIf="role === 'ADMIN'"
+          type="button"
+          (click)="openAddModal()"
+          class="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
+        >
+          <i class="bi bi-plus-lg"></i>
+          Add Holiday
+        </button>
+      </div>
     </div>
 
     <!-- DESKTOP TABLE -->
-
-    <div *ngIf="!loading && filteredHolidays.length > 0" class="hidden md:block overflow-x-auto">
-      <table class="w-full">
-        <thead class="bg-slate-800 text-white">
-          <tr>
-            <th class="px-5 py-4 text-left text-sm font-semibold">Date</th>
-
-            <th class="px-5 py-4 text-left text-sm font-semibold">Holiday</th>
-
-            <th class="px-5 py-4 text-left text-sm font-semibold">Type</th>
-
-            <th class="px-5 py-4 text-left text-sm font-semibold">Description</th>
-
-            <th class="px-5 py-4 text-center text-sm font-semibold">Status</th>
-
-            <th *ngIf="role === 'ADMIN'" class="px-5 py-4 text-center text-sm font-semibold">
+    <div *ngIf="!loading && filteredHolidays.length > 0" class="hidden overflow-x-auto md:block">
+      <table class="w-full min-w-[900px]">
+        <thead>
+          <tr class="border-b border-slate-200 bg-slate-50/80">
+            <th
+              class="px-5 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-slate-500 sm:px-6"
+            >
+              Date
+            </th>
+            <th
+              class="px-5 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-slate-500"
+            >
+              Holiday
+            </th>
+            <th
+              class="px-5 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-slate-500"
+            >
+              Type
+            </th>
+            <th
+              class="px-5 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-slate-500"
+            >
+              Description
+            </th>
+            <th
+              class="px-5 py-3.5 text-center text-[11px] font-bold uppercase tracking-wider text-slate-500"
+            >
+              Status
+            </th>
+            <th
+              *ngIf="role === 'ADMIN'"
+              class="px-5 py-3.5 text-right text-[11px] font-bold uppercase tracking-wider text-slate-500 sm:px-6"
+            >
               Actions
             </th>
           </tr>
         </thead>
 
-        <tbody>
+        <tbody class="divide-y divide-slate-100">
           <tr
             *ngFor="let holiday of filteredHolidays"
-            class="border-b border-gray-100 hover:bg-slate-50 transition"
+            class="group transition-colors hover:bg-blue-50/40"
           >
-            <td class="px-5 py-4">
+            <td class="whitespace-nowrap px-5 py-4 sm:px-6">
               <div class="flex items-center gap-3">
                 <div
-                  class="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex flex-col items-center justify-center shrink-0"
+                  class="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 text-blue-700 ring-1 ring-blue-100"
                 >
-                  <span class="text-sm font-bold leading-none">
-                    {{ holiday.holidayDate | date: 'dd' }}
-                  </span>
-
-                  <span class="text-[10px] font-semibold uppercase mt-1">
-                    {{ holiday.holidayDate | date: 'MMM' }}
-                  </span>
+                  <span class="text-base font-extrabold leading-none">{{
+                    holiday.holidayDate | date: 'dd'
+                  }}</span>
+                  <span class="mt-1 text-[9px] font-bold uppercase tracking-wide">{{
+                    holiday.holidayDate | date: 'MMM'
+                  }}</span>
                 </div>
-
                 <div>
-                  <p class="font-semibold text-slate-800">
+                  <p class="text-sm font-bold text-slate-800">
                     {{ holiday.holidayDate | date: 'dd MMM yyyy' }}
                   </p>
-
-                  <p class="text-xs text-gray-400 mt-0.5">
+                  <p class="mt-0.5 text-xs text-slate-400">
                     {{ holiday.holidayDate | date: 'EEEE' }}
                   </p>
                 </div>
               </div>
             </td>
-
             <td class="px-5 py-4">
-              <p class="font-semibold text-slate-800">
-                {{ holiday.name }}
-              </p>
+              <p class="font-bold text-slate-800">{{ holiday.name }}</p>
             </td>
-
             <td class="px-5 py-4">
               <span
-                class="inline-flex px-3 py-1 rounded-full text-xs font-semibold"
+                class="inline-flex items-center rounded-full px-3 py-1.5 text-xs font-bold ring-1 ring-inset"
                 [ngClass]="getTypeClass(holiday.type)"
+                >{{ holiday.type }}</span
               >
-                {{ holiday.type }}
-              </span>
             </td>
-
-            <td class="px-5 py-4 text-sm text-gray-600 max-w-xs">
-              {{ holiday.description || '--' }}
+            <td class="max-w-xs px-5 py-4">
+              <p class="line-clamp-2 text-sm leading-5 text-slate-500">
+                {{ holiday.description || 'No description provided' }}
+              </p>
             </td>
-
             <td class="px-5 py-4 text-center">
               <span
                 *ngIf="isUpcoming(holiday.holidayDate)"
-                class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold"
+                class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700 ring-1 ring-inset ring-emerald-200"
               >
-                <i class="bi bi-clock"></i>
-
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
                 Upcoming
               </span>
-
               <span
                 *ngIf="!isUpcoming(holiday.holidayDate)"
-                class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gray-100 text-gray-500 text-xs font-semibold"
+                class="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-500 ring-1 ring-inset ring-slate-200"
               >
                 <i class="bi bi-check2"></i>
-
                 Completed
               </span>
             </td>
-
-            <td *ngIf="role === 'ADMIN'" class="px-5 py-4">
-              <div class="flex items-center justify-center gap-2">
+            <td *ngIf="role === 'ADMIN'" class="px-5 py-4 sm:px-6">
+              <div class="flex items-center justify-end gap-2">
                 <button
                   type="button"
                   (click)="editHoliday(holiday)"
-                  title="Edit Holiday"
-                  class="w-9 h-9 flex items-center justify-center rounded-lg bg-yellow-100 text-yellow-700 hover:bg-yellow-200 transition"
+                  title="Edit holiday"
+                  class="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border border-amber-200 bg-amber-50 text-amber-700 transition-all hover:-translate-y-0.5 hover:bg-amber-100 hover:shadow-sm"
+                  aria-label="Edit holiday"
                 >
                   <i class="bi bi-pencil-square"></i>
                 </button>
-
                 <button
                   type="button"
                   (click)="deleteHoliday(holiday)"
-                  title="Delete Holiday"
-                  class="w-9 h-9 flex items-center justify-center rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition"
+                  title="Delete holiday"
+                  class="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border border-red-200 bg-red-50 text-red-600 transition-all hover:-translate-y-0.5 hover:bg-red-100 hover:shadow-sm"
+                  aria-label="Delete holiday"
                 >
-                  <i class="bi bi-trash"></i>
+                  <i class="bi bi-trash3"></i>
                 </button>
               </div>
             </td>
@@ -341,197 +421,235 @@
     </div>
 
     <!-- MOBILE CARDS -->
-
-    <div *ngIf="!loading && filteredHolidays.length > 0" class="md:hidden divide-y divide-gray-100">
-      <div *ngFor="let holiday of filteredHolidays" class="p-5">
-        <div class="flex items-start gap-4">
+    <div
+      *ngIf="!loading && filteredHolidays.length > 0"
+      class="divide-y divide-slate-100 md:hidden"
+    >
+      <article *ngFor="let holiday of filteredHolidays" class="p-4 sm:p-5">
+        <div class="flex items-start gap-3.5">
           <div
-            class="w-14 h-14 rounded-xl bg-blue-50 text-blue-600 flex flex-col items-center justify-center shrink-0"
+            class="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 text-blue-700 ring-1 ring-blue-100"
           >
-            <span class="text-lg font-bold leading-none">
-              {{ holiday.holidayDate | date: 'dd' }}
-            </span>
-
-            <span class="text-xs uppercase mt-1">
-              {{ holiday.holidayDate | date: 'MMM' }}
-            </span>
+            <span class="text-lg font-extrabold leading-none">{{
+              holiday.holidayDate | date: 'dd'
+            }}</span>
+            <span class="mt-1 text-[10px] font-bold uppercase tracking-wide">{{
+              holiday.holidayDate | date: 'MMM'
+            }}</span>
           </div>
 
-          <div class="flex-1 min-w-0">
+          <div class="min-w-0 flex-1">
             <div class="flex items-start justify-between gap-2">
-              <div>
-                <h3 class="font-semibold text-slate-800">
-                  {{ holiday.name }}
-                </h3>
-
-                <p class="text-sm text-gray-500 mt-1">
+              <div class="min-w-0">
+                <h3 class="truncate font-bold text-slate-800">{{ holiday.name }}</h3>
+                <p class="mt-1 text-xs text-slate-500">
                   {{ holiday.holidayDate | date: 'EEEE, dd MMM yyyy' }}
                 </p>
               </div>
-
               <span
-                class="px-2 py-1 rounded-full text-[10px] font-semibold"
+                class="shrink-0 rounded-full px-2.5 py-1 text-[10px] font-bold ring-1 ring-inset"
                 [ngClass]="getTypeClass(holiday.type)"
+                >{{ holiday.type }}</span
               >
-                {{ holiday.type }}
-              </span>
             </div>
 
-            <p *ngIf="holiday.description" class="text-sm text-gray-600 mt-3">
+            <p *ngIf="holiday.description" class="mt-3 text-sm leading-6 text-slate-600">
               {{ holiday.description }}
             </p>
 
-            <div *ngIf="role === 'ADMIN'" class="flex gap-2 mt-4">
-              <button
-                type="button"
-                (click)="editHoliday(holiday)"
-                class="flex-1 px-4 py-2 rounded-lg bg-yellow-100 text-yellow-700 text-sm font-semibold"
+            <div class="mt-3 flex flex-wrap items-center justify-between gap-3">
+              <span
+                *ngIf="isUpcoming(holiday.holidayDate)"
+                class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold text-emerald-700 ring-1 ring-inset ring-emerald-200"
               >
-                Edit
-              </button>
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                Upcoming
+              </span>
+              <span
+                *ngIf="!isUpcoming(holiday.holidayDate)"
+                class="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-bold text-slate-500 ring-1 ring-inset ring-slate-200"
+              >
+                <i class="bi bi-check2"></i>
+                Completed
+              </span>
 
-              <button
-                type="button"
-                (click)="deleteHoliday(holiday)"
-                class="flex-1 px-4 py-2 rounded-lg bg-red-100 text-red-700 text-sm font-semibold"
-              >
-                Delete
-              </button>
+              <div *ngIf="role === 'ADMIN'" class="ml-auto flex items-center gap-2">
+                <button
+                  type="button"
+                  (click)="editHoliday(holiday)"
+                  class="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-amber-50 px-3 py-2 text-xs font-bold text-amber-700 ring-1 ring-amber-200 transition hover:bg-amber-100"
+                >
+                  <i class="bi bi-pencil-square"></i>
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  (click)="deleteHoliday(holiday)"
+                  class="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-red-50 px-3 py-2 text-xs font-bold text-red-600 ring-1 ring-red-200 transition hover:bg-red-100"
+                >
+                  <i class="bi bi-trash3"></i>
+                  Delete
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </article>
     </div>
-  </div>
+  </section>
 
   <!-- ADD / EDIT MODAL -->
-
   <div
     *ngIf="showModal && role === 'ADMIN'"
-    class="fixed inset-0 z-[9999] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
+    class="fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto bg-slate-950/60 p-4 backdrop-blur-sm"
     (click)="closeModal()"
   >
-    <div
-      class="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden"
+    <section
+      class="relative my-auto w-full max-w-xl overflow-hidden rounded-3xl bg-white shadow-2xl shadow-slate-950/30"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="holiday-modal-title"
       (click)="$event.stopPropagation()"
     >
-      <!-- MODAL HEADER -->
-
-      <div class="flex items-center justify-between px-6 py-5 border-b border-gray-200">
-        <div class="flex items-center gap-3">
-          <div
-            class="w-11 h-11 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center"
+      <header
+        class="relative overflow-hidden bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 px-5 py-5 text-white sm:px-6"
+      >
+        <div
+          class="pointer-events-none absolute -right-8 -top-10 h-28 w-28 rounded-full bg-white/10"
+        ></div>
+        <div class="relative flex items-center justify-between gap-4">
+          <div class="flex min-w-0 items-center gap-3">
+            <div
+              class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/15 ring-1 ring-white/20"
+            >
+              <i
+                class="bi text-xl"
+                [ngClass]="isEditMode ? 'bi-calendar2-check' : 'bi-calendar-plus'"
+              ></i>
+            </div>
+            <div class="min-w-0">
+              <h2 id="holiday-modal-title" class="truncate text-lg font-extrabold">
+                {{ isEditMode ? 'Edit Holiday' : 'Add New Holiday' }}
+              </h2>
+              <p class="mt-0.5 text-xs text-white/70">
+                {{
+                  isEditMode
+                    ? 'Update the selected holiday information'
+                    : 'Create a new event in the company calendar'
+                }}
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            (click)="closeModal()"
+            class="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-xl text-white/80 transition hover:bg-white/15 hover:text-white"
+            title="Close"
+            aria-label="Close modal"
           >
-            <i class="bi bi-calendar-event text-xl"></i>
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+      </header>
+
+      <div class="max-h-[calc(100dvh-13rem)] space-y-5 overflow-y-auto p-5 sm:p-6">
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <div>
+            <label class="mb-2 block text-sm font-bold text-slate-700"
+              >Holiday Date <span class="text-red-500">*</span></label
+            >
+            <div class="relative">
+              <i
+                class="bi bi-calendar3 pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+              ></i>
+              <input
+                type="date"
+                [(ngModel)]="holidayForm.holidayDate"
+                class="h-12 w-full rounded-xl border border-slate-300 bg-slate-50/60 py-3 pl-11 pr-4 text-sm text-slate-700 outline-none transition hover:border-slate-400 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100"
+              />
+            </div>
           </div>
 
           <div>
-            <h2 class="text-xl font-bold text-slate-800">
-              {{ isEditMode ? 'Edit Holiday' : 'Add Holiday' }}
-            </h2>
-
-            <p class="text-sm text-gray-500 mt-1">
-              {{ isEditMode ? 'Update holiday information' : 'Create a new company holiday' }}
-            </p>
+            <label class="mb-2 block text-sm font-bold text-slate-700"
+              >Holiday Type <span class="text-red-500">*</span></label
+            >
+            <div class="relative">
+              <i
+                class="bi bi-tag pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+              ></i>
+              <select
+                [(ngModel)]="holidayForm.type"
+                class="h-12 w-full cursor-pointer appearance-none rounded-xl border border-slate-300 bg-slate-50/60 py-3 pl-11 pr-10 text-sm text-slate-700 outline-none transition hover:border-slate-400 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100"
+              >
+                <option *ngFor="let type of holidayTypes" [value]="type">{{ type }}</option>
+              </select>
+              <i
+                class="bi bi-chevron-down pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400"
+              ></i>
+            </div>
           </div>
         </div>
 
-        <button
-          type="button"
-          (click)="closeModal()"
-          class="w-9 h-9 rounded-lg hover:bg-gray-100 text-gray-500"
-        >
-          <i class="bi bi-x-lg"></i>
-        </button>
-      </div>
-
-      <!-- MODAL BODY -->
-
-      <div class="p-6 space-y-5">
-        <!-- DATE -->
-
         <div>
-          <label class="block text-sm font-semibold text-slate-600 mb-2">
-            Holiday Date
-            <span class="text-red-500"> * </span>
-          </label>
-
-          <input
-            type="date"
-            [(ngModel)]="holidayForm.holidayDate"
-            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <!-- NAME -->
-
-        <div>
-          <label class="block text-sm font-semibold text-slate-600 mb-2">
-            Holiday Name
-            <span class="text-red-500"> * </span>
-          </label>
-
-          <input
-            type="text"
-            [(ngModel)]="holidayForm.name"
-            placeholder="e.g. Independence Day"
-            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <!-- TYPE -->
-
-        <div>
-          <label class="block text-sm font-semibold text-slate-600 mb-2">
-            Holiday Type
-            <span class="text-red-500"> * </span>
-          </label>
-
-          <select
-            [(ngModel)]="holidayForm.type"
-            class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          <label class="mb-2 block text-sm font-bold text-slate-700"
+            >Holiday Name <span class="text-red-500">*</span></label
           >
-            <option *ngFor="let type of holidayTypes" [value]="type">
-              {{ type }}
-            </option>
-          </select>
+          <div class="relative">
+            <i
+              class="bi bi-type pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+            ></i>
+            <input
+              type="text"
+              [(ngModel)]="holidayForm.name"
+              placeholder="e.g. Independence Day"
+              class="h-12 w-full rounded-xl border border-slate-300 bg-slate-50/60 py-3 pl-11 pr-4 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 hover:border-slate-400 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100"
+            />
+          </div>
         </div>
 
-        <!-- DESCRIPTION -->
-
         <div>
-          <label class="block text-sm font-semibold text-slate-600 mb-2"> Description </label>
-
+          <div class="mb-2 flex items-center justify-between gap-3">
+            <label class="block text-sm font-bold text-slate-700">Description</label>
+            <span class="text-[10px] font-medium uppercase tracking-wide text-slate-400"
+              >Optional</span
+            >
+          </div>
           <textarea
             [(ngModel)]="holidayForm.description"
             rows="4"
-            placeholder="Optional holiday description..."
-            class="w-full px-4 py-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Add a short note about this holiday..."
+            class="w-full resize-none rounded-xl border border-slate-300 bg-slate-50/60 px-4 py-3 text-sm leading-6 text-slate-700 outline-none transition placeholder:text-slate-400 hover:border-slate-400 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100"
           ></textarea>
+        </div>
+
+        <div
+          class="flex items-start gap-3 rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-xs leading-5 text-blue-700"
+        >
+          <i class="bi bi-info-circle mt-0.5 shrink-0"></i>
+          <p>This holiday will be visible to all employees in their EMS calendar.</p>
         </div>
       </div>
 
-      <!-- MODAL FOOTER -->
-
-      <div class="flex justify-end gap-3 px-6 py-4 border-t border-gray-200 bg-gray-50">
+      <footer
+        class="flex flex-col-reverse gap-2 border-t border-slate-200 bg-slate-50 px-5 py-4 sm:flex-row sm:justify-end sm:px-6"
+      >
         <button
           type="button"
           (click)="closeModal()"
-          class="px-5 py-2.5 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition"
+          class="inline-flex min-h-11 cursor-pointer items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-600 transition hover:bg-slate-100 hover:text-slate-800"
         >
           Cancel
         </button>
-
         <button
           type="button"
           (click)="saveHoliday()"
-          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition"
+          class="inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-2.5 text-sm font-bold text-white shadow-md shadow-purple-200 transition-all hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0"
         >
           <i class="bi" [ngClass]="isEditMode ? 'bi-check-lg' : 'bi-plus-lg'"></i>
-
           {{ isEditMode ? 'Update Holiday' : 'Add Holiday' }}
         </button>
-      </div>
-    </div>
+      </footer>
+    </section>
   </div>
 </div>

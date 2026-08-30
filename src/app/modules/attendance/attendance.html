@@ -112,6 +112,11 @@
               class="text-2xl font-bold mt-2"
               [ngClass]="{
                 'text-green-600': todayAttendance?.status === 'PRESENT',
+                'text-yellow-600': todayAttendance?.status === 'LATE',
+                'text-blue-600': todayAttendance?.status === 'WFH',
+                'text-orange-600': todayAttendance?.status === 'HALF_DAY',
+                'text-red-300': todayAttendance?.status === 'SHORT_HOURS',
+                'text-gray-600': todayAttendance?.status === 'HOLIDAY',
 
                 'text-red-600': !todayAttendance,
               }"
@@ -229,7 +234,7 @@
         <button
           (click)="checkIn()"
           [disabled]="!selectedEmployeeId || todayAttendance?.checkIn"
-          class="flex items-center gap-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed text-white font-medium px-6 py-3 rounded-lg transition"
+          class="flex cursor-pointer items-center gap-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed text-white font-medium px-6 py-3 rounded-lg transition"
         >
           <i class="bi bi-box-arrow-in-right"></i>
 
@@ -241,7 +246,7 @@
         <button
           (click)="checkOut()"
           [disabled]="!selectedEmployeeId || !todayAttendance?.checkIn || todayAttendance?.checkOut"
-          class="flex items-center gap-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed text-white font-medium px-6 py-3 rounded-lg transition"
+          class="flex cursor-pointer items-center gap-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed text-white font-medium px-6 py-3 rounded-lg transition"
         >
           <i class="bi bi-box-arrow-right"></i>
 

@@ -85,19 +85,20 @@ export class Sidebar {
     localStorage.setItem('sidebarCollapsed', String(this.isCollapsed));
   }
 
-  // logout(): void {
-  //   localStorage.removeItem('token');
-  //   localStorage.removeItem('role');
-  //   localStorage.removeItem('userName');
-  //   localStorage.removeItem('email');
-  //   localStorage.removeItem('employeeId');
-  //   localStorage.removeItem('employeeName');
-  //   localStorage.removeItem('department');
-  //   localStorage.removeItem('designation');
-
-  //   this.router.navigate(['/login']);
-  // }
   logout(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('email');
+    localStorage.removeItem('employeeId');
+    localStorage.removeItem('employeeName');
+    localStorage.removeItem('department');
+    localStorage.removeItem('designation');
+    localStorage.removeItem('ems_ai_chat_history');
+
+    this.router.navigate(['/login']);
+  }
+  logou1(): void {
     localStorage.clear();
 
     this.router.navigateByUrl('/login');
